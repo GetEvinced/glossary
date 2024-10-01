@@ -24,12 +24,9 @@ import {Title} from '@angular/platform-browser';
 import {debounceTime, map} from 'rxjs';
 
 import {TerminalType} from '../terminal/terminal-handler.service';
-import {EmbeddedTutorialManager} from '../embedded-tutorial-manager.service';
 
 import {CodeMirrorEditor} from './code-mirror-editor.service';
 import {DiagnosticWithLocation, DiagnosticsState} from './services/diagnostics-state.service';
-import {DownloadManager} from '../download-manager.service';
-import {StackBlitzOpener} from '../stackblitz-opener.service';
 import {ClickOutside, IconComponent} from '../../angular-docs';
 import {CdkMenu, CdkMenuItem, CdkMenuTrigger} from '@angular/cdk/menu';
 import {IDXLauncher} from '../idx-launcher.service';
@@ -78,12 +75,8 @@ export class CodeEditor implements AfterViewInit, OnDestroy {
 
   private readonly codeMirrorEditor = inject(CodeMirrorEditor);
   private readonly diagnosticsState = inject(DiagnosticsState);
-  private readonly downloadManager = inject(DownloadManager);
-  private readonly stackblitzOpener = inject(StackBlitzOpener);
-  private readonly idxLauncher = inject(IDXLauncher);
   private readonly title = inject(Title);
   private readonly location = inject(Location);
-  private readonly embeddedTutorialManager = inject(EmbeddedTutorialManager);
 
   private readonly errors$ = this.diagnosticsState.diagnostics$.pipe(
     // Display errors one second after code update
@@ -121,21 +114,11 @@ export class CodeEditor implements AfterViewInit, OnDestroy {
   }
 
   openCurrentSolutionInIDX(): void {
-    this.idxLauncher.openCurrentSolutionInIDX();
   }
   async openCurrentCodeInStackBlitz(): Promise<void> {
-    const title = this.title.getTitle();
-
-    const path = this.location.path();
-    const editorUrl = `${ANGULAR_DEV}${path}`;
-    const description = `Angular.dev example generated from [${editorUrl}](${editorUrl})`;
-
-    await this.stackblitzOpener.openCurrentSolutionInStackBlitz({title, description});
   }
 
   async downloadCurrentCodeEditorState(): Promise<void> {
-    const name = this.embeddedTutorialManager.tutorialId();
-    await this.downloadManager.downloadCurrentStateOfTheSolution(name);
   }
 
   closeErrorsBox(): void {
@@ -228,12 +211,6 @@ export class CodeEditor implements AfterViewInit, OnDestroy {
   }
 
   private setSelectedTabOnTutorialChange() {
-    this.embeddedTutorialManager.tutorialChanged$
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {
-        // selected file on project change is always the first
-        this.matTabGroup.selectedIndex = 0;
-      });
   }
 
   private listenToTabChange() {

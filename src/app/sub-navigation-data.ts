@@ -8,15 +8,8 @@
 
 import {NavigationItem} from './angular-docs';
 
-// These 2 imports are expected to be red because they are generated a build time
-import FIRST_APP_TUTORIAL_NAV_DATA from '../../src/generated-assets/tutorials/first-app/routes.json';
-import LEARN_ANGULAR_TUTORIAL_NAV_DATA from '../../src/generated-assets/tutorials/learn-angular/routes.json';
-
-import {DefaultPage} from './core/enums/pages';
-
 interface SubNavigationData {
   docs: NavigationItem[];
-  tutorials: NavigationItem[];
   footer: NavigationItem[];
 }
 
@@ -78,10 +71,6 @@ const DOCS_SUB_NAVIGATION_DATA: NavigationItem[] = [
             contentPath: 'introduction/essentials/next-steps',
           },
         ],
-      },
-      {
-        label: 'Start coding! 🚀',
-        path: 'tutorials/learn-angular',
       },
     ],
   },
@@ -867,16 +856,6 @@ const DOCS_SUB_NAVIGATION_DATA: NavigationItem[] = [
   },
 ];
 
-export const TUTORIALS_SUB_NAVIGATION_DATA: NavigationItem[] = [
-  FIRST_APP_TUTORIAL_NAV_DATA,
-  LEARN_ANGULAR_TUTORIAL_NAV_DATA,
-  {
-    path: DefaultPage.TUTORIALS,
-    contentPath: 'tutorials/home',
-    label: 'Tutorials',
-  },
-];
-
 const FOOTER_NAVIGATION_DATA: NavigationItem[] = [
   {
     label: 'Press Kit',
@@ -894,6 +873,5 @@ const FOOTER_NAVIGATION_DATA: NavigationItem[] = [
 // navigation-list component And build the routing table for content pages.
 export const SUB_NAVIGATION_DATA: SubNavigationData = {
   docs: DOCS_SUB_NAVIGATION_DATA,
-  tutorials: TUTORIALS_SUB_NAVIGATION_DATA,
   footer: FOOTER_NAVIGATION_DATA,
 };

@@ -1,4 +1,3 @@
-export {EmbeddedTutorialManager} from './embedded-tutorial-manager.service';
 export {LoadingStep} from './enums/loading-steps';
 export {NodeRuntimeState} from './node-runtime-state.service';
 

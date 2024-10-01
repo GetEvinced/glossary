@@ -203,46 +203,6 @@
     }
   }
 
-  // Tabs on Tutorials page, Tutorials Playground
-  .docs-tutorial-editor,
-  .docs-code-editor-tabs,
-  .docs-editor-tabs {
-    .mat-mdc-tab-header {
-      --mdc-tab-indicator-active-indicator-color: transparent;
-      --mat-tab-header-active-focus-indicator-color: transparent;
-      --mat-tab-header-active-hover-indicator-color: transparent;
-      --mat-tab-header-label-text-font: InterTight, sans-serif;
-      --mat-tab-header-label-text-tracking: -0.00875rem;
-      --mat-tab-header-label-text-size: 0.8125rem;
-
-      .mat-mdc-tab-labels {
-        gap: 0;
-        transition: border-color 0.3s ease;
-        width: 100%;
-      }
-
-      .mdc-tab {
-        padding-inline: 18px !important;
-      }
-
-      .mdc-tab--active {
-        border: 0;
-        border-block-end-width: 2px;
-        border-style: solid;
-        border-image: var(--pink-to-purple-horizontal-gradient) 1;
-
-        &.cdk-keyboard-focused {
-          border-image: var(--blue-to-cyan-vertical-gradient) 1;
-        }
-
-        &:has(.docs-delete-file) {
-          padding-inline-start: 18px !important;
-          padding-inline-end: 0.5px !important;
-        }
-      }
-    }
-  }
-
   .docs-editor-tabs {
     .mat-mdc-tab-header {
       border-block-end: 1px solid var(--senary-contrast);

@@ -17,7 +17,7 @@ import {
 } from '@angular/core';
 
 import {injectAsync} from '../../../core/services/inject-async';
-import {EmbeddedEditor, EmbeddedTutorialManager} from '../../../editor';
+import {EmbeddedEditor} from '../../../editor';
 
 @Component({
   selector: 'adev-code-editor',
@@ -31,7 +31,6 @@ import {EmbeddedEditor, EmbeddedTutorialManager} from '../../../editor';
 export class CodeEditorComponent implements OnInit {
   private readonly cdRef = inject(ChangeDetectorRef);
   private readonly environmentInjector = inject(EnvironmentInjector);
-  private readonly embeddedTutorialManager = inject(EmbeddedTutorialManager);
 
   @Input({required: true}) tutorialFiles!: string;
 
@@ -43,8 +42,6 @@ export class CodeEditorComponent implements OnInit {
     const nodeRuntimeSandbox = await injectAsync(this.environmentInjector, () =>
       import('../../../editor/index').then((c) => c.NodeRuntimeSandbox),
     );
-
-    await this.embeddedTutorialManager.fetchAndSetTutorialFiles(this.tutorialFiles);
 
     this.cdRef.markForCheck();
 

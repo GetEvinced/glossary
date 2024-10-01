@@ -14,4 +14,3 @@ export * from './environment';
 export * from './navigation-item';
 export * from './table-of-contents-item';
 export * from './search-results';
-export * from './tutorial';

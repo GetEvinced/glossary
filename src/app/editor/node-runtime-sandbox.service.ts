@@ -7,16 +7,11 @@
  */
 
 import {DestroyRef, inject, Injectable, signal} from '@angular/core';
-import {checkFilesInDirectory} from '../angular-docs';
 import {FileSystemTree, WebContainer, WebContainerProcess} from '@webcontainer/api';
 import {BehaviorSubject, filter, map, Subject} from 'rxjs';
 
-import type {FileAndContent} from '../angular-docs';
-import {TutorialType} from '../angular-docs';
-
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {AlertManager} from './alert-manager.service';
-import {EmbeddedTutorialManager} from './embedded-tutorial-manager.service';
 import {LoadingStep} from './enums/loading-steps';
 import {ErrorType, NodeRuntimeState} from './node-runtime-state.service';
 import {TerminalHandler} from './terminal/terminal-handler.service';
@@ -54,7 +49,6 @@ export class NodeRuntimeSandbox {
   private readonly destroyRef = inject(DestroyRef);
   private readonly alertManager = inject(AlertManager);
   private readonly terminalHandler = inject(TerminalHandler);
-  private embeddedTutorialManager = inject(EmbeddedTutorialManager);
   private readonly nodeRuntimeState = inject(NodeRuntimeState);
   private readonly typingsLoader = inject(TypingsLoader);
 
@@ -77,40 +71,6 @@ export class NodeRuntimeSandbox {
     // in an unsupported environment.
     if (this.nodeRuntimeState.error()) {
       return;
-    }
-
-    try {
-      if (!this.embeddedTutorialManager.type())
-        throw Error("Tutorial type isn't available, can not initialize the NodeRuntimeSandbox");
-
-      console.time('Load time');
-
-      let webContainer: WebContainer;
-      if (this.nodeRuntimeState.loadingStep() === LoadingStep.NOT_STARTED) {
-        this.alertManager.init();
-
-        webContainer = await this.boot();
-
-        await this.handleWebcontainerErrors();
-      } else {
-        webContainer = await this.webContainerPromise!;
-      }
-
-      await this.startInteractiveTerminal(webContainer);
-      this.terminalHandler.clearTerminals();
-
-      if (this.embeddedTutorialManager.type() === TutorialType.CLI) {
-        await this.initAngularCli();
-      } else {
-        await this.initProject();
-      }
-
-      console.timeEnd('Load time');
-    } catch (error: any) {
-      // If we're already in an error state, throw away the most recent error which may have happened because
-      // we were in the error state already and tried to do more things after terminating.
-      const message = this.nodeRuntimeState.error()?.message ?? error.message;
-      this.setErrorState(message);
     }
   }
 
@@ -142,18 +102,6 @@ export class NodeRuntimeSandbox {
     await this.startDevServer();
   }
 
-  async getSolutionFiles(): Promise<FileAndContent[]> {
-    const webContainer = await this.webContainerPromise!;
-
-    const excludeFolders = ['node_modules', '.angular', 'dist'];
-
-    return await checkFilesInDirectory(
-      '/',
-      webContainer.fs,
-      (path?: string) => !!path && !excludeFolders.includes(path),
-    );
-  }
-
   /**
    * Initialize the WebContainer for an Angular project
    */
@@ -183,41 +131,6 @@ export class NodeRuntimeSandbox {
   }
 
   private handleProjectChanges() {
-    this.embeddedTutorialManager.tutorialChanged$
-      .pipe(
-        map((tutorialChanged) => ({
-          tutorialChanged,
-          tutorialFiles: this.embeddedTutorialManager.tutorialFiles(),
-        })),
-        filter(
-          ({tutorialChanged, tutorialFiles}) =>
-            tutorialChanged && Object.keys(tutorialFiles).length > 0,
-        ),
-        takeUntilDestroyed(this.destroyRef),
-      )
-      .subscribe(async () => {
-        await Promise.all([this.mountProjectFiles(), this.handleFilesToDeleteOnProjectChange()]);
-
-        if (this.embeddedTutorialManager.shouldReInstallDependencies()) {
-          await this.handleInstallDependenciesOnProjectChange();
-        }
-      });
-  }
-
-  private async handleFilesToDeleteOnProjectChange() {
-    const filesToDelete = Array.from(
-      new Set([
-        ...this.embeddedTutorialManager.filesToDeleteFromPreviousProject(),
-        ...Array.from(this._createdFiles()),
-      ]),
-    );
-
-    if (filesToDelete.length) {
-      await Promise.all(filesToDelete.map((file) => this.deleteFile(file)));
-    }
-
-    // reset created files
-    this._createdFiles.set(new Set());
   }
 
   private async handleInstallDependenciesOnProjectChange() {
@@ -349,25 +262,10 @@ export class NodeRuntimeSandbox {
   }
 
   private async mountProjectFiles() {
-    if (!this.embeddedTutorialManager.tutorialFilesystemTree()) {
-      return;
-    }
-
     // The files are mounted on init and when the project changes. If the loading step is ready,
     // the project changed, so we don't need to change the loading step.
     if (this.nodeRuntimeState.loadingStep() !== LoadingStep.READY) {
       this.setLoading(LoadingStep.LOAD_FILES);
-    }
-
-    const tutorialHasFiles =
-      Object.keys(this.embeddedTutorialManager.tutorialFilesystemTree() as FileSystemTree).length >
-      0;
-
-    if (tutorialHasFiles) {
-      await Promise.all([
-        this.mountFiles(this.embeddedTutorialManager.commonFilesystemTree() as FileSystemTree),
-        this.mountFiles(this.embeddedTutorialManager.tutorialFilesystemTree() as FileSystemTree),
-      ]);
     }
   }
 

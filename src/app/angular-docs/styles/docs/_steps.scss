@@ -50,32 +50,5 @@
         top: calc(1rem + 55px);
       }
     }
-
-    .docs-tutorial-content & {
-      &::before {
-        // calc(1rem + sticky tutorial nav height)
-        top: calc(1rem + 120px);
-
-        // adjust for tablet nav bar height
-        @include mq.for-tablet-landscape-down {
-          top: calc(1rem + 165px);
-        }
-
-        // adjust for mobile nav bar height
-        @include mq.for-phone-only {
-          top: calc(1rem + 140px);
-        }
-      }
-    }
-
-    .docs-tutorial-content:has(.docs-reveal-answer-button) & {
-      &::before {
-        // calc(1rem + sticky tutorial nav height
-        // + reveal answer button height when on smaller screens)
-        @container tutorial-content (max-width: 430px) {
-          top: calc(1rem + 175px);
-        }
-      }
-    }
   }
 }

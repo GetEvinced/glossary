@@ -28,7 +28,7 @@ import {
 } from '../../../angular-docs';
 import {NavigationEnd, Router, RouterLink} from '@angular/router';
 import {filter, map, startWith} from 'rxjs/operators';
-import {DOCS_ROUTES, TUTORIALS_ROUTES} from '../../../routes';
+import {DOCS_ROUTES} from '../../../routes';
 import {GITHUB, MEDIUM, X, YOUTUBE, DISCORD} from '../../constants/links';
 import {PagePrefix} from '../../enums/pages';
 import {Theme, ThemeManager} from '../../services/theme-manager.service';
@@ -59,8 +59,6 @@ export class Navigation implements OnInit {
 
   readonly DOCS_ROUTE = PagePrefix.DOCS;
   readonly HOME_ROUTE = PagePrefix.HOME;
-  readonly PLAYGROUND_ROUTE = PagePrefix.PLAYGROUND;
-  readonly TUTORIALS_ROUTE = PagePrefix.TUTORIALS;
 
   readonly GITHUB = GITHUB;
   readonly X = X;
@@ -170,15 +168,9 @@ export class Navigation implements OnInit {
       this.activeRouteItem.set(PagePrefix.HOME);
     } else if (urlAfterRedirects.startsWith(PagePrefix.DOCS)) {
       this.activeRouteItem.set(PagePrefix.DOCS);
-    } else if (urlAfterRedirects === PagePrefix.PLAYGROUND) {
-      this.activeRouteItem.set(PagePrefix.PLAYGROUND);
-    } else if (urlAfterRedirects.startsWith(PagePrefix.TUTORIALS)) {
-      this.activeRouteItem.set(PagePrefix.TUTORIALS);
-    } else if (DOCS_ROUTES.some((route) => route.path === urlAfterRedirects)) {
+    }  else if (DOCS_ROUTES.some((route) => route.path === urlAfterRedirects)) {
       this.activeRouteItem.set(PagePrefix.DOCS);
-    } else if (TUTORIALS_ROUTES.some((route) => route.path === urlAfterRedirects)) {
-      this.activeRouteItem.set(PagePrefix.TUTORIALS);
-    } else {
+    }  else {
       // Reset if no active route item could be found
       this.activeRouteItem.set(null);
     }

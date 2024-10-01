@@ -15,10 +15,7 @@ import {SUB_NAVIGATION_DATA} from './sub-navigation-data';
 // Docs navigation data contains routes which navigates to /tutorials pages, in
 // that case we should load Tutorial component
 export const DOCS_ROUTES = mapNavigationItemsToRoutes(
-  flatNavigationData(SUB_NAVIGATION_DATA.docs).filter(
-    (route) =>
-      !route.path?.startsWith(PagePrefix.TUTORIALS) && route.path !== PagePrefix.PLAYGROUND,
-  ),
+  flatNavigationData(SUB_NAVIGATION_DATA.docs),
   {
     loadComponent: () => import('./features/docs/docs.component'),
     data: {
@@ -27,33 +24,10 @@ export const DOCS_ROUTES = mapNavigationItemsToRoutes(
   },
 );
 
-const tutorialsNavigationItems = flatNavigationData(SUB_NAVIGATION_DATA.tutorials);
-const commonTutorialRouteData = {
-  hideFooter: true,
-};
-const docsTutorialsRoutes = mapNavigationItemsToRoutes(
-  tutorialsNavigationItems.filter((route) => route.path === DefaultPage.TUTORIALS),
-  {
-    loadComponent: () => import('./features/docs/docs.component'),
-    data: {
-      ...commonTutorialRouteData,
-    },
-  },
-);
-const tutorialComponentRoutes = mapNavigationItemsToRoutes(
-  tutorialsNavigationItems.filter((route) => route.path !== DefaultPage.TUTORIALS),
-  {
-    loadComponent: () => import('./features/tutorial/tutorial.component'),
-    data: {...commonTutorialRouteData},
-  },
-);
-export const TUTORIALS_ROUTES = [...docsTutorialsRoutes, ...tutorialComponentRoutes];
-
 // Based on SUB_NAVIGATION_DATA structure, we need to build the routing table
 // for content pages.
 export const SUB_NAVIGATION_ROUTES: Route[] = [
-  ...DOCS_ROUTES,
-  ...TUTORIALS_ROUTES,
+  ...DOCS_ROUTES
 ];
 
 const FOOTER_ROUTES: Route[] = mapNavigationItemsToRoutes(
@@ -125,15 +99,6 @@ export const routes: Route[] = [
       {
         path: PagePrefix.DOCS,
         redirectTo: DefaultPage.DOCS,
-      },
-      {
-        path: PagePrefix.TUTORIALS,
-        redirectTo: DefaultPage.TUTORIALS,
-      },
-      {
-        path: PagePrefix.PLAYGROUND,
-        loadComponent: () => import('./features/playground/playground.component'),
-        data: {...commonTutorialRouteData, label: 'Playground'},
       },
       ...SUB_NAVIGATION_ROUTES,
       ...FOOTER_ROUTES,

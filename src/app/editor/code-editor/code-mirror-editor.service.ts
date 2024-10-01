@@ -8,17 +8,15 @@
 
 import {DestroyRef, Injectable, inject, signal} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {Subject, Subscription, debounceTime, filter, map} from 'rxjs';
+import {Subject, Subscription, debounceTime, filter} from 'rxjs';
 
 import {LRLanguage, LanguageSupport} from '@codemirror/language';
 import {EditorState, Transaction} from '@codemirror/state';
 import {EditorView, placeholder as placeholderExtension} from '@codemirror/view';
 
-import {EmbeddedTutorialManager} from '../embedded-tutorial-manager.service';
 import {NodeRuntimeSandbox} from '../node-runtime-sandbox.service';
 import {TypingsLoader} from '../typings-loader.service';
 
-import {FileAndContentRecord} from '../../angular-docs';
 import {CODE_EDITOR_EXTENSIONS} from './constants/code-editor-extensions';
 import {LANGUAGES} from './constants/code-editor-languages';
 import {getAutocompleteExtension} from './extensions/autocomplete';
@@ -77,7 +75,6 @@ export class CodeMirrorEditor {
 
   private readonly nodeRuntimeSandbox = inject(NodeRuntimeSandbox);
   private readonly nodeRuntimeState = inject(NodeRuntimeState);
-  private readonly embeddedTutorialManager = inject(EmbeddedTutorialManager);
   private readonly typingsLoader = inject(TypingsLoader);
   private readonly destroyRef = inject(DestroyRef);
   private readonly diagnosticsState = inject(DiagnosticsState);
@@ -243,148 +240,22 @@ export class CodeMirrorEditor {
     });
   }
 
-  /**
-   * Update virtual TypeScript file system with current code editor files
-   */
-  private updateVfsEnv(): void {
-    this.sendRequestToTsVfs<Map<string, string>>({
-      action: TsVfsWorkerActions.UPDATE_VFS_ENV_REQUEST,
-      data: this.getVfsEnvFileSystemMap(),
-    });
-  }
-
   private listenToProjectChanges() {
-    this.tutorialChangeListener$ = this.embeddedTutorialManager.tutorialChanged$
-      .pipe(
-        map(() => this.embeddedTutorialManager.tutorialFiles()),
-        filter((tutorialFiles) => Object.keys(tutorialFiles).length > 0),
-        takeUntilDestroyed(this.destroyRef),
-      )
-      .subscribe(() => {
-        this.changeProject();
-      });
-  }
-
-  private changeProject() {
-    this.setProjectFiles();
-
-    this._editorStates.clear();
-
-    this.changeCurrentFile(this.currentFile().filename);
-
-    this.updateVfsEnv();
-  }
-
-  private setProjectFiles(): void {
-    const tutorialFiles = this.getTutorialFiles(this.embeddedTutorialManager.tutorialFiles());
-
-    const openFiles: EditorFile[] = [];
-
-    // iterate openFiles to keep files order
-    for (const openFileName of this.embeddedTutorialManager.openFiles()) {
-      const openFile = tutorialFiles.find(({filename}) => filename === openFileName);
-
-      if (openFile) {
-        openFiles.push(openFile);
-      }
-    }
-
-    this.files.set(tutorialFiles);
-    this.openFiles.set(openFiles);
-    this.changeCurrentFile(openFiles[0].filename);
   }
 
   /**
    * Update the code editor files when files are created
    */
   private async addCreatedFileToCodeEditor(createdFile: string): Promise<void> {
-    const fileContents = await this.nodeRuntimeSandbox.readFile(createdFile);
-
-    this.embeddedTutorialManager.tutorialFiles.update((files) => ({
-      ...files,
-      [createdFile]: fileContents,
-    }));
-
-    this.embeddedTutorialManager.openFiles.update((files) => [...files, createdFile]);
-
-    this.setProjectFiles();
-
-    this.updateVfsEnv();
-
-    this.saveLibrariesTypes();
   }
 
   async createFile(filename: string) {
-    // if file already exists, use its content
-    const content = await this.nodeRuntimeSandbox.readFile(filename).catch((error) => {
-      // empty content if file does not exist
-      if (error.message.includes('ENOENT')) return '';
-      else throw error;
-    });
-
-    await this.nodeRuntimeSandbox.writeFile(filename, content);
-
-    this.embeddedTutorialManager.tutorialFiles.update((files) => ({
-      ...files,
-      [filename]: content,
-    }));
-
-    this.embeddedTutorialManager.openFiles.update((files) => [...files, filename]);
-
-    this.setProjectFiles();
-
-    this.updateVfsEnv();
-
-    this.saveLibrariesTypes();
-
-    this.changeCurrentFile(filename);
   }
 
   async renameFile(oldPath: string, newPath: string) {
-    const content = await this.nodeRuntimeSandbox.readFile(oldPath).catch((error) => {
-      // empty content if file does not exist
-      if (error.message.includes('ENOENT')) return '';
-      else throw error;
-    });
-
-    await this.nodeRuntimeSandbox.renameFile(oldPath, newPath).catch((error) => {
-      throw error;
-    });
-
-    this.embeddedTutorialManager.tutorialFiles.update((files) => {
-      delete files[oldPath];
-      files[newPath] = content;
-      return files;
-    });
-
-    this.embeddedTutorialManager.openFiles.update((files) => [
-      ...files.filter((file) => file !== oldPath),
-      newPath,
-    ]);
-
-    this.setProjectFiles();
-    this.updateVfsEnv();
-    this.saveLibrariesTypes();
-    this.changeCurrentFile(newPath);
   }
 
   async deleteFile(deletedFile: string): Promise<void> {
-    await this.nodeRuntimeSandbox.deleteFile(deletedFile);
-
-    this.embeddedTutorialManager.tutorialFiles.update((files) => {
-      delete files[deletedFile];
-      return files;
-    });
-
-    this.embeddedTutorialManager.openFiles.update((files) =>
-      files.filter((file) => file !== deletedFile),
-    );
-
-    this.setProjectFiles();
-
-    this.updateVfsEnv();
-
-    this.saveLibrariesTypes();
   }
 
   private createEditorState(): EditorState {
@@ -460,27 +331,5 @@ export class CodeMirrorEditor {
         code: newContent,
       },
     });
-  }
-
-  private getTutorialFiles(files: FileAndContentRecord): EditorFile[] {
-    const languagesExtensions = Object.keys(LANGUAGES);
-
-    const tutorialFiles = Object.entries(files)
-      .filter(
-        (fileAndContent): fileAndContent is [string, string] =>
-          typeof fileAndContent[1] === 'string',
-      )
-      .map(([filename, content]) => {
-        const extension = languagesExtensions.find((extension) => filename.endsWith(extension));
-        const language = extension ? LANGUAGES[extension] : LANGUAGES['ts'];
-
-        return {
-          filename,
-          content,
-          language,
-        };
-      });
-
-    return tutorialFiles;
   }
 }

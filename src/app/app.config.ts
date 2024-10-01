@@ -40,7 +40,6 @@ import {ADevTitleStrategy} from './core/services/a-dev-title-strategy';
 import {ContentLoader} from './core/services/content-loader.service';
 import {CustomErrorHandler} from './core/services/errors-handling/error-handler';
 import {ExampleContentLoader} from './core/services/example-content-loader.service';
-import {ReuseTutorialsRouteStrategy} from './features/tutorial/tutorials-route-reuse-strategy';
 import {routes} from './routes';
 import {AppScroller} from './app-scroller';
 
@@ -81,10 +80,6 @@ export const appConfig: ApplicationConfig = {
     {provide: PREVIEWS_COMPONENTS, useValue: PREVIEWS_COMPONENTS_MAP},
     {provide: DOCS_CONTENT_LOADER, useClass: ContentLoader},
     {provide: EXAMPLE_VIEWER_CONTENT_LOADER, useClass: ExampleContentLoader},
-    {
-      provide: RouteReuseStrategy,
-      useClass: ReuseTutorialsRouteStrategy,
-    },
     {
       provide: WINDOW,
       useFactory: (document: Document) => windowProvider(document),
