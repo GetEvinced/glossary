@@ -10,21 +10,16 @@
 
 // The enum with the prefixes of the main routes
 export enum PagePrefix {
-  API = 'api',
   CLI = 'cli',
   DOCS = 'docs',
   HOME = '',
   PLAYGROUND = 'playground',
-  REFERENCE = 'reference',
   TUTORIALS = 'tutorials',
-  UPDATE = 'update-guide',
 }
 
 // The enum with the default pages for each main tab
 export enum DefaultPage {
   DOCS = 'overview',
-  REFERENCE = 'api',
   TUTORIALS = 'tutorials',
   PLAYGROUND = 'playground',
-  UPDATE = 'update-guide',
 }

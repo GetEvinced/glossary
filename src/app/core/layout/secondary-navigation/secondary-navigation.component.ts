@@ -67,9 +67,7 @@ export class SecondaryNavigation implements OnInit {
 
   readonly isSecondaryNavVisible = this.navigationState.isMobileNavVisible;
   readonly primaryActiveRouteItem = this.navigationState.primaryActiveRouteItem;
-  readonly maxVisibleLevelsOnSecondaryNav = computed(() =>
-    this.primaryActiveRouteItem() === PagePrefix.REFERENCE ? 1 : 2,
-  );
+  readonly maxVisibleLevelsOnSecondaryNav = signal(2);
   readonly navigationItemsSlides = this.navigationState.expandedItems;
   navigationItems: NavigationItem[] | undefined;
 
@@ -83,9 +81,6 @@ export class SecondaryNavigation implements OnInit {
   readonly SECONDARY_NAV_ID = SECONDARY_NAV_ID;
 
   private readonly routeMap: Record<string, NavigationItem[]> = {
-    [PagePrefix.REFERENCE]: getNavigationItemsTree(SUB_NAVIGATION_DATA.reference, (tree) =>
-      markExternalLinks(tree, this.window.origin),
-    ),
     [PagePrefix.DOCS]: getNavigationItemsTree(SUB_NAVIGATION_DATA.docs, (tree) =>
       markExternalLinks(tree, this.window.origin),
     ),
@@ -140,17 +135,12 @@ export class SecondaryNavigation implements OnInit {
          * Example:
          * API Reference (level == 0) -> Overview, Animations, common, etc (level == 1) -> API Package exports (level == 2)
          */
-        const shouldExpandItem = (node: NavigationItem): boolean =>
-          !!node.level &&
-          (this.primaryActiveRouteItem() === PagePrefix.REFERENCE
-            ? node.level > 0
-            : node.level > 1);
+        const shouldExpandItem = (node: NavigationItem): boolean => !!node.level && (node.level > 1);
 
         // Skip expand when active item is API Reference homepage - `/api`.
         // It protect us from displaying second level of the navigation when user clicks on `Reference`,
         // Because in this situation we want to display the first level, which contains, in addition to the API Reference, also the CLI Reference, Error Encyclopedia etc.
-        const skipExpandPredicateFn = (node: NavigationItem): boolean =>
-          node.path === PagePrefix.API;
+        const skipExpandPredicateFn = (node: NavigationItem): boolean => false;
 
         this.navigationState.expandItemHierarchy(
           activeNavigationItem,

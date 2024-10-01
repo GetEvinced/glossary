@@ -11,7 +11,6 @@ import {Route} from '@angular/router';
 
 import {DefaultPage, PagePrefix} from './core/enums/pages';
 import {SUB_NAVIGATION_DATA} from './sub-navigation-data';
-import {mapApiManifestToRoutes} from './features/references/helpers/manifest.helper';
 
 // Docs navigation data contains routes which navigates to /tutorials pages, in
 // that case we should load Tutorial component
@@ -27,62 +26,6 @@ export const DOCS_ROUTES = mapNavigationItemsToRoutes(
     },
   },
 );
-
-const referenceNavigationItems = flatNavigationData(SUB_NAVIGATION_DATA.reference);
-const commonReferenceRouteData = {
-  displaySecondaryNav: true,
-};
-const referencePageRoutes = mapNavigationItemsToRoutes(
-  referenceNavigationItems.filter((r) => r.path === DefaultPage.REFERENCE),
-  {
-    loadComponent: () =>
-      import('./features/references/api-reference-list/api-reference-list.component'),
-    data: commonReferenceRouteData,
-  },
-);
-
-const updateGuidePageRoute: Route = {
-  path: referenceNavigationItems.find((r) => r.path === DefaultPage.UPDATE)!.path,
-  loadComponent: () => import('./features/update/update.component'),
-  data: commonReferenceRouteData,
-};
-
-const cliReferencePageRoutes = mapNavigationItemsToRoutes(
-  referenceNavigationItems.filter((r) => r.path?.startsWith(`${PagePrefix.CLI}/`)),
-  {
-    loadComponent: () =>
-      import(
-        './features/references/cli-reference-details-page/cli-reference-details-page.component'
-      ),
-    data: commonReferenceRouteData,
-  },
-).map((route) => ({
-  ...route,
-  resolve: {
-    docContent: contentResolver(`${route.path}.html`),
-  },
-}));
-
-const docsReferencePageRoutes = mapNavigationItemsToRoutes(
-  referenceNavigationItems.filter(
-    (r) =>
-      r.path !== DefaultPage.REFERENCE &&
-      r.path !== DefaultPage.UPDATE &&
-      !r.path?.startsWith(`${PagePrefix.API}/`) &&
-      !r.path?.startsWith(`${PagePrefix.CLI}/`),
-  ),
-  {
-    loadComponent: () => import('./features/docs/docs.component'),
-    data: {
-      ...commonReferenceRouteData,
-    },
-  },
-);
-export const REFERENCE_ROUTES = [
-  ...referencePageRoutes,
-  ...docsReferencePageRoutes,
-  ...cliReferencePageRoutes,
-];
 
 const tutorialsNavigationItems = flatNavigationData(SUB_NAVIGATION_DATA.tutorials);
 const commonTutorialRouteData = {
@@ -110,7 +53,6 @@ export const TUTORIALS_ROUTES = [...docsTutorialsRoutes, ...tutorialComponentRou
 // for content pages.
 export const SUB_NAVIGATION_ROUTES: Route[] = [
   ...DOCS_ROUTES,
-  ...REFERENCE_ROUTES,
   ...TUTORIALS_ROUTES,
 ];
 
@@ -118,8 +60,6 @@ const FOOTER_ROUTES: Route[] = mapNavigationItemsToRoutes(
   flatNavigationData(SUB_NAVIGATION_DATA.footer),
   {loadComponent: () => import('./features/docs/docs.component')},
 );
-
-const API_REFERENCE_ROUTES: Route[] = mapApiManifestToRoutes();
 
 const REDIRECT_ROUTES: Route[] = [
   {
@@ -191,18 +131,12 @@ export const routes: Route[] = [
         redirectTo: DefaultPage.TUTORIALS,
       },
       {
-        path: PagePrefix.REFERENCE,
-        redirectTo: DefaultPage.REFERENCE,
-      },
-      {
         path: PagePrefix.PLAYGROUND,
         loadComponent: () => import('./features/playground/playground.component'),
         data: {...commonTutorialRouteData, label: 'Playground'},
       },
       ...SUB_NAVIGATION_ROUTES,
-      ...API_REFERENCE_ROUTES,
       ...FOOTER_ROUTES,
-      updateGuidePageRoute,
       ...REDIRECT_ROUTES,
     ],
   },
