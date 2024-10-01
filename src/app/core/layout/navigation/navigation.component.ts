@@ -72,9 +72,6 @@ export class Navigation implements OnInit {
   readonly PRIMARY_NAV_ID = PRIMARY_NAV_ID;
   readonly SECONDARY_NAV_ID = SECONDARY_NAV_ID;
 
-  // We can't use the ActivatedRouter queryParams as we're outside the router outlet
-  readonly isUwu = 'location' in globalThis ? location.search.includes('uwu') : false;
-
   miniMenuPositions = [
     new ConnectionPositionPair(
       {originX: 'end', originY: 'center'},
