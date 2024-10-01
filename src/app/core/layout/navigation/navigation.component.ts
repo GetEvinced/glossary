@@ -32,12 +32,11 @@ import {DOCS_ROUTES, REFERENCE_ROUTES, TUTORIALS_ROUTES} from '../../../routes';
 import {GITHUB, MEDIUM, X, YOUTUBE, DISCORD} from '../../constants/links';
 import {PagePrefix} from '../../enums/pages';
 import {Theme, ThemeManager} from '../../services/theme-manager.service';
-import {VersionManager} from '../../services/version-manager.service';
 import {PRIMARY_NAV_ID, SECONDARY_NAV_ID} from '../../constants/element-ids';
 import {ConnectionPositionPair} from '@angular/cdk/overlay';
 import {COMMAND, CONTROL, SEARCH_TRIGGER_KEY} from '../../constants/keys';
 
-type MenuType = 'social' | 'theme-picker' | 'version-picker';
+type MenuType = 'social' | 'theme-picker';
 
 @Component({
   selector: 'div.adev-nav',
@@ -57,7 +56,6 @@ export class Navigation implements OnInit {
   private readonly themeManager = inject(ThemeManager);
   private readonly isSearchDialogOpen = inject(IS_SEARCH_DIALOG_OPEN);
   private readonly window = inject(WINDOW);
-  private readonly versionManager = inject(VersionManager);
 
   readonly DOCS_ROUTE = PagePrefix.DOCS;
   readonly HOME_ROUTE = PagePrefix.HOME;
@@ -95,9 +93,6 @@ export class Navigation implements OnInit {
   theme = this.themeManager.theme;
   openedMenu: MenuType | null = null;
 
-  currentDocsVersion = this.versionManager.currentDocsVersion;
-  currentDocsVersionMode = this.versionManager.currentDocsVersion()?.version;
-
   // Set the values of the search label and title only on the client, because the label is user-agent specific.
   searchLabel = this.isBrowser
     ? isApple
@@ -109,7 +104,6 @@ export class Navigation implements OnInit {
       ? `${COMMAND} ${SEARCH_TRIGGER_KEY.toUpperCase()}`
       : `${CONTROL} ${SEARCH_TRIGGER_KEY.toUpperCase()}`
     : '';
-  versions = this.versionManager.versions;
 
   isMobileNavigationOpened = this.navigationState.isMobileNavVisible;
   isMobileNavigationOpened$ = toObservable(this.isMobileNavigationOpened);
@@ -123,13 +117,6 @@ export class Navigation implements OnInit {
 
   setTheme(theme: Theme): void {
     this.themeManager.setTheme(theme);
-  }
-
-  openVersionMenu($event: MouseEvent): void {
-    // It's required to avoid redirection to `home`
-    $event.stopImmediatePropagation();
-    $event.preventDefault();
-    this.openMenu('version-picker');
   }
 
   openMenu(menuType: MenuType): void {

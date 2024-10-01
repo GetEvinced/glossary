@@ -61,9 +61,6 @@
   <nav
     class="adev-nav-primary docs-scroll-hide"
     [class.adev-nav-primary--open]="isMobileNavigationOpened()"
-    [class.adev-nav-primary--rc]="currentDocsVersionMode === 'rc'"
-    [class.adev-nav-primary--next]="currentDocsVersionMode === 'next'"
-    [class.adev-nav-primary--deprecated]="currentDocsVersionMode === 'deprecated'"
   >
     <button
       type="button"
@@ -135,49 +132,6 @@
             height="34"/>
         }
         </a>
-
-        <!-- Version picker for v18+ -->
-        <div class="adev-nav-item">
-          <button
-            type="button"
-            aria-label="Select Angular version"
-            role="menu"
-            class="adev-version-button"
-            [class.adev-mini-menu-open]="openedMenu === 'version-picker'"
-            [cdkMenuTriggerFor]="docsVersionMiniMenu"
-            [cdkMenuPosition]="miniMenuPositions"
-            (cdkMenuClosed)="closeMenu()"
-            (click)="openVersionMenu($event)"
-          >
-            {{ currentDocsVersion()?.displayName }}
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              height="15"
-              viewBox="0 -960 960 960"
-              width="15"
-              fill="inherit"
-            >
-              <path d="M480-345 240-585l56-56 184 184 184-184 56 56-240 240Z" />
-            </svg>
-          </button>
-
-          <ng-template #docsVersionMiniMenu>
-            <ul class="adev-mini-menu adev-version-picker" cdkMenu>
-              @for (item of versions(); track item) {
-              <li>
-                <a
-                  type="button"
-                  cdkMenuItem
-                  [href]="item.url"
-                  [attr.aria-label]="item.displayName"
-                >
-                  <span>{{ item.displayName }}</span>
-              </a>
-              </li>
-              }
-            </ul>
-          </ng-template>
-        </div>
       </li>
 
       <!-- Search -->

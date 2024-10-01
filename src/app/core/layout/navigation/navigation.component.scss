@@ -69,23 +69,6 @@
   padding-block-end: 2rem;
   box-sizing: border-box;
 
-  &.adev-nav-primary--next,
-  &.adev-nav-primary--rc {
-    // change nav background to indicate this is the rc docs
-    background: linear-gradient(
-      140deg,
-      color-mix(in srgb, var(--orange-red), transparent 60%) 0%,
-      color-mix(in srgb, var(--vivid-pink), transparent 40%) 15%,
-      color-mix(in srgb, var(--electric-violet), transparent 70%) 25%,
-      color-mix(in srgb, var(--bright-blue), transparent 60%) 90%,
-      );
-  }
-
-  &.adev-nav-primary--deprecated {
-    // change nav background to indicate this is an outdated version of the docs
-    background-color: color-mix(in srgb, var(--symbolic-gray), transparent 30%);
-  }
-
   // div containing mobile close button and adev-nav_top
   > div {
     display: flex;

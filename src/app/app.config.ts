@@ -12,7 +12,6 @@ import {
   ApplicationConfig,
   ENVIRONMENT_INITIALIZER,
   ErrorHandler,
-  VERSION,
   inject,
   provideExperimentalZonelessChangeDetection,
 } from '@angular/core';
@@ -44,7 +43,6 @@ import {CustomErrorHandler} from './core/services/errors-handling/error-handler'
 import {ExampleContentLoader} from './core/services/example-content-loader.service';
 import {ReuseTutorialsRouteStrategy} from './features/tutorial/tutorials-route-reuse-strategy';
 import {routes} from './routes';
-import {CURRENT_MAJOR_VERSION} from './core/providers/current-version';
 import {AppScroller} from './app-scroller';
 
 export const appConfig: ApplicationConfig = {
@@ -75,10 +73,6 @@ export const appConfig: ApplicationConfig = {
     provideClientHydration(),
     provideHttpClient(withFetch()),
     provideAnimationsAsync(),
-    {
-      provide: CURRENT_MAJOR_VERSION,
-      useValue: Number(VERSION.major),
-    },
     {provide: ENVIRONMENT, useValue: environment},
     {
       provide: ENVIRONMENT_INITIALIZER,
