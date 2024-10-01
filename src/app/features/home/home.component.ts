@@ -24,17 +24,13 @@ import {RouterLink} from '@angular/router';
 
 import {injectAsync} from '../../core/services/inject-async';
 
-import {CodeEditorComponent} from './components/home-editor.component';
-
 import {HEADER_CLASS_NAME} from './home-animation-constants';
 import type {HomeAnimation} from './services/home-animation.service';
-
-export const TUTORIALS_HOMEPAGE_DIRECTORY = 'homepage';
 
 @Component({
   standalone: true,
   selector: 'adev-home',
-  imports: [RouterLink, CodeEditorComponent],
+  imports: [RouterLink],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -47,7 +43,6 @@ export default class Home implements OnInit, AfterViewInit, OnDestroy {
   private readonly platformId = inject(PLATFORM_ID);
   private readonly window = inject(WINDOW);
 
-  protected readonly tutorialFiles = TUTORIALS_HOMEPAGE_DIRECTORY;
   private element!: HTMLDivElement;
   private homeAnimation?: HomeAnimation;
   private intersectionObserver: IntersectionObserver | undefined;
