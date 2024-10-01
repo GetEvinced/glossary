@@ -828,45 +828,11 @@ const DOCS_SUB_NAVIGATION_DATA: NavigationItem[] = [
         path: 'ecosystem/web-workers',
         contentPath: 'ecosystem/web-workers',
       },
-      {
-        label: 'Angular Fire',
-        path: 'https://github.com/angular/angularfire#readme',
-      },
-      {
-        label: 'Google Maps',
-        path: 'https://github.com/angular/components/tree/main/src/google-maps#readme',
-      },
-      {
-        label: 'Google Pay',
-        path: 'https://github.com/google-pay/google-pay-button#angular',
-      },
-      {
-        label: 'YouTube player',
-        path: 'https://github.com/angular/components/blob/main/src/youtube-player/README.md',
-      },
-      {
-        label: 'Angular CDK',
-        path: 'https://material.angular.io/cdk/categories',
-      },
-      {
-        label: 'Angular Material',
-        path: 'https://material.angular.io/',
-      },
     ],
   },
 ];
 
 const FOOTER_NAVIGATION_DATA: NavigationItem[] = [
-  {
-    label: 'Press Kit',
-    path: 'press-kit',
-    contentPath: 'reference/press-kit',
-  },
-  {
-    label: 'License',
-    path: 'license',
-    contentPath: 'reference/license',
-  },
 ];
 
 // Docs navigation data structure, it's used to display structure in
