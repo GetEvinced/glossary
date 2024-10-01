@@ -11,5 +11,4 @@ import {AlgoliaConfig} from './algolia-config';
 export interface Environment {
   production: boolean;
   algolia: AlgoliaConfig;
-  googleAnalyticsId: string;
 }
