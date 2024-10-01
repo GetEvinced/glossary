@@ -23,7 +23,6 @@ import {
   WINDOW,
   windowProvider,
 } from './angular-docs';
-import {provideClientHydration} from '@angular/platform-browser';
 import {provideAnimationsAsync} from '@angular/platform-browser/animations/async';
 import {
   RouteReuseStrategy,
@@ -70,7 +69,6 @@ export const appConfig: ApplicationConfig = {
       withComponentInputBinding(),
     ),
     provideExperimentalZonelessChangeDetection(),
-    provideClientHydration(),
     provideHttpClient(withFetch()),
     provideAnimationsAsync(),
     {provide: ENVIRONMENT, useValue: environment},
