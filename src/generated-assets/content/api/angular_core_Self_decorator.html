@@ -1,0 +1,13 @@
+<div class="api"><header class="docs-reference-header"><span class="docs-reference-category">@angular/core</span><div class="docs-reference-title"><div><h1>Self</h1><div class="docs-api-item-label" data-mode="full" data-type="decorator">decorator</div></div><a class="docs-github-links" target="_blank" href="https://github.com/angular/angular/blob/main/packages/core/src/di/metadata.ts#L154-L157" title="View source" aria-label="View source"><i role="presentation" aria-hidden="true" class="material-symbols-outlined">code</i></a></div><section class="docs-reference-description"><p>Parameter decorator to be used on constructor parameters,
+which tells the DI framework to start dependency resolution from the local injector.</p></section><nav class="docs-pill-row"><a class="docs-pill" href="/api/core/SkipSelf">SkipSelf</a><a class="docs-pill" href="/api/core/Optional">Optional</a></nav></header><div data-tab="API" data-tab-url="api"><div class="docs-reference-api-tab"><div class="docs-code"><pre class="docs-mini-scroll-track"><pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0">
+  <code>
+    <span class="line ">@<span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"><a href="/api/core/Self">Self</a></span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> ({</span></span><span class="line "><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">})</span></span>
+  </code>
+  </pre></pre></div></div></div><div data-tab="Description" data-tab-url="description"><div><p>Parameter decorator to be used on constructor parameters,
+which tells the DI framework to start dependency resolution from the local injector.</p>
+<p>Resolution works upward through the injector hierarchy, so the children
+of this class must configure their own providers or be prepared for a <code>null</code> result.</p></div></div><div data-tab="Usage Notes" data-tab-url="usage-notes"><div><p>In the following example, the dependency can be resolved
+by the local injector when instantiating the class itself, but not
+when instantiating a child.</p>
+<code-example path="core/di/ts/metadata_spec.ts" region="Self">
+</code-example></div></div></div>

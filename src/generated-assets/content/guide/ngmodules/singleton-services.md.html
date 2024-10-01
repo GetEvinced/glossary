@@ -1,0 +1,184 @@
+
+    <header class="docs-header">
+      <docs-breadcrumb></docs-breadcrumb>
+
+      
+  <!-- Page title -->
+  <div class="docs-page-title">
+    <h1 tabindex="-1">Singleton services</h1>
+    <a class="docs-github-links" target="_blank" href="https://github.com/angular/angular/edit/main/adev/src/content/guide/ngmodules/singleton-services.md" title="Edit this page" aria-label="Edit this page">
+      <!-- Pencil -->
+      <docs-icon role="presentation">edit</docs-icon>
+    </a>
+  </div>
+    </header>
+    <p>A singleton service is a service for which only one instance exists in an application.</p>
+
+  <h2 id="providing-a-singleton-service">
+    <a href="#providing-a-singleton-service" class="docs-anchor" tabindex="-1" aria-label="Link to Providing a singleton service">Providing a singleton service</a>
+  </h2>
+  <p>There are two ways to make a service a singleton in Angular:</p>
+
+  <ul class="docs-list">
+    <li>Set the <code>providedIn</code> property of the <code>@Injectable()</code> to <code>&quot;root&quot;</code></li>
+<li>Include the service in the <code>AppModule</code> or in a module that is only imported by the <code>AppModule</code></li>
+
+  </ul>
+  
+  <h3 id="using-providedin">
+    <a href="#using-providedin" class="docs-anchor" tabindex="-1" aria-label="Link to Using <code>providedIn</code>">Using <code>providedIn</code></a>
+  </h3>
+  <p>The preferred way to create a singleton service is to set <code>providedIn</code> to <code>root</code> on the service&#39;s <code>@Injectable()</code> decorator.
+This tells Angular to provide the service in the application root.</p>
+<div class="docs-code" header="src/app/user.service.ts">
+    <div class="docs-code-header"><h3>src/app/user.service.ts</h3></div>
+    <pre class="docs-mini-scroll-track">      <pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">import</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> { Injectable } </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">from</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF"> '@angular/core'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">;</span></span><span class="line"></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">@</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">Injectable</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">({</span></span><span class="line highlighted"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  providedIn: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">'root'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">,</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">})</span></span><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">export</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583"> class</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> UserService</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> {</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre>
+    </pre>
+  </div>
+  <h3 id="ngmodule-providers-array">
+    <a href="#ngmodule-providers-array" class="docs-anchor" tabindex="-1" aria-label="Link to NgModule <code>providers</code> array">NgModule <code>providers</code> array</a>
+  </h3>
+  <p>In applications built with Angular versions prior to 6.0, services were commonly registered in the <code>@NgModule</code> <code>providers</code> field as followed:</p>
+<div class="docs-code">
+    
+    <pre class="docs-mini-scroll-track">      <pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">@</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">NgModule</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">({</span></span><span class="line"><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D">  // ...</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  providers: [UserService],</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">})</span></span></code></pre>
+    </pre>
+  </div><p>If this NgModule were the root <code>AppModule</code>, the <code>UserService</code> would be a singleton and available throughout the application.
+Though you may see it coded this way, using the <code>providedIn</code> property of the <code>@Injectable()</code> decorator on the service itself is preferable as of Angular 6.0 as it makes your services tree-shakable.</p>
+
+  <h2 id="the-forroot-pattern">
+    <a href="#the-forroot-pattern" class="docs-anchor" tabindex="-1" aria-label="Link to The <code>forRoot()</code> pattern">The <code>forRoot()</code> pattern</a>
+  </h2>
+  <p>Generally, you&#39;ll only need <code>providedIn</code> for providing services and <code>forRoot()</code>/<code>forChild()</code> for routing.
+However, understanding how <code>forRoot()</code> works to make sure a service is a singleton will inform your development at a deeper level.</p>
+<p>If a module defines both providers and declarations (components, directives, pipes), then loading the module in multiple feature modules would duplicate the registration of the service.
+This could result in multiple service instances and the service would no longer behave as a singleton.</p>
+<p>There are multiple ways to prevent this:</p>
+
+  <ul class="docs-list">
+    <li>Use the <a href="#using-providedin"><code>providedIn</code> syntax</a> instead of registering the service in the module.</li>
+<li>Separate your services into their own module that is imported once.</li>
+<li>Define <code>forRoot()</code> and <code>forChild()</code> methods in the module.</li>
+
+  </ul>
+  <p>For an introductory explanation see the <a href="guide/ngmodules/lazy-loading">Lazy Loading Feature Modules</a> guide.</p>
+<p>Use <code>forRoot()</code> to separate providers from a module so you can import that module into the root module with <code>providers</code> and child modules without <code>providers</code>.</p>
+
+    <ol class="docs-ordered-list">
+      <li>Create a static method <code>forRoot()</code> on the module.</li>
+<li>Place the providers into the <code>forRoot()</code> method.</li>
+
+    </ol>
+    <div class="docs-code" header="src/app/greeting/greeting.module.ts">
+    <div class="docs-code-header"><h3>src/app/greeting/greeting.module.ts</h3></div>
+    <pre class="docs-mini-scroll-track">      <pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">@</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">NgModule</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">({</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">...</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">})</span></span><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">export</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583"> class</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> GreetingModule</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> {</span></span><span class="line highlighted"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">  static</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> forRoot</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70">config</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> UserServiceConfig</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">)</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> ModuleWithProviders</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&lt;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">GreetingModule</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&gt; {</span></span><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">    return</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> {</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">      ngModule: GreetingModule,</span></span><span class="line highlighted"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">      providers: [</span></span><span class="line highlighted"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">        {provide: UserServiceConfig, useValue: config }</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">      ]</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">    };</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  }</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre>
+    </pre>
+  </div>
+  <h3 id="forroot-and-the-router">
+    <a href="#forroot-and-the-router" class="docs-anchor" tabindex="-1" aria-label="Link to <code>forRoot()</code> and the <code>Router</code>"><code>forRoot()</code> and the <code>Router</code></a>
+  </h3>
+  <p><code>RouterModule</code> provides the <code>Router</code> service, as well as router directives, such as <code>RouterOutlet</code> and <code>routerLink</code>.
+The root application module imports <code>RouterModule</code> so that the application has a <code>Router</code> and the root application components can access the router directives.
+Any feature modules must also import <code>RouterModule</code> so that their components can place router directives into their templates.</p>
+<p>If the <code>RouterModule</code> didn&#39;t have <code>forRoot()</code> then each feature module would instantiate a new <code>Router</code> instance, which would break the application as there can only be one <code>Router</code>.
+By using the <code>forRoot()</code> method, the root application module imports <code>RouterModule.forRoot(...)</code> and gets a <code>Router</code>, and all feature modules import <code>RouterModule.forChild(...)</code> which does not instantiate another <code>Router</code>.</p>
+
+    <div class="docs-alert docs-alert-helpful">
+    <p><strong>HELPFUL:</strong> If you have a module which has both providers and declarations, you <em>can</em> use this technique to separate them out and you may see this pattern in legacy applications.
+However, since Angular 6.0, the best practice for providing services is with the <code>@Injectable()</code> <code>providedIn</code> property.</p>
+
+    </div>
+    
+  <h3 id="how-forroot-works">
+    <a href="#how-forroot-works" class="docs-anchor" tabindex="-1" aria-label="Link to How <code>forRoot()</code> works">How <code>forRoot()</code> works</a>
+  </h3>
+  <p><code>forRoot()</code> takes a service configuration object and returns a <a href="api/core/ModuleWithProviders">ModuleWithProviders</a>, which is a simple object with the following properties:</p>
+
+  <div class="docs-table docs-scroll-track-transparent">
+    <table>
+      <thead>
+        <tr>
+<th align="left">Properties</th>
+<th align="left">Details</th>
+</tr>
+
+      </thead>
+      <tbody>
+        <tr>
+<td align="left"><code>ngModule</code></td>
+<td align="left">In this example, the <code>GreetingModule</code> class</td>
+</tr>
+<tr>
+<td align="left"><code>providers</code></td>
+<td align="left">The configured providers</td>
+</tr>
+
+      </tbody>
+    </table>
+  </div>
+  <p>Specifically, Angular accumulates all imported providers before appending the items listed in <code>@NgModule.providers</code>.
+This sequence ensures that whatever you add explicitly to the <code>AppModule</code> providers takes precedence over the providers of imported modules.</p>
+<p>The sample application imports <code>GreetingModule</code> and uses its <code>forRoot()</code> method one time, in <code>AppModule</code>.
+Registering it once like this prevents multiple instances.</p>
+<p>In the following example, the <code>UserServiceConfig</code> is optionally injected in the <code>UserService</code>.
+If a config exists, the service sets the user name based on the retrieved config.</p>
+<div class="docs-code" header="src/app/greeting/user.service.ts (constructor)">
+    <div class="docs-code-header"><h3>src/app/greeting/user.service.ts (constructor)</h3></div>
+    <pre class="docs-mini-scroll-track">      <pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">constructor</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(@</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">Optional</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">() config</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">?:</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> UserServiceConfig) {</span></span><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">    if</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> (config) {</span></span><span class="line"><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">      this</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">._userName </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> config.userName;</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">    }</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  }</span></span></code></pre>
+    </pre>
+  </div><p>Here&#39;s <code>forRoot()</code> that takes a <code>UserServiceConfig</code> object:</p>
+<div class="docs-code" header="src/app/greeting/greeting.module.ts">
+    <div class="docs-code-header"><h3>src/app/greeting/greeting.module.ts</h3></div>
+    <pre class="docs-mini-scroll-track">      <pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">@</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">NgModule</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">({</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">...</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">})</span></span><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">export</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583"> class</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> GreetingModule</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> {</span></span><span class="line highlighted"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">  static</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> forRoot</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70">config</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> UserServiceConfig</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">)</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> ModuleWithProviders</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&lt;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">GreetingModule</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&gt; {</span></span><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">    return</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> {</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">      ngModule: GreetingModule,</span></span><span class="line highlighted"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">      providers: [</span></span><span class="line highlighted"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">        {provide: UserServiceConfig, useValue: config }</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">      ]</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">    };</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  }</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre>
+    </pre>
+  </div><p>Lastly, call it within the <code>imports</code> list of the <code>AppModule</code>.
+In the following snippet, other parts of the file are left out.</p>
+<div class="docs-code" header="src/app/app.module.ts (imports)">
+    <div class="docs-code-header"><h3>src/app/app.module.ts (imports)</h3></div>
+    <pre class="docs-mini-scroll-track">      <pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">import</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> { GreetingModule } </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">from</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF"> './greeting/greeting.module'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">;</span></span><span class="line"></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">@</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">NgModule</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">({</span></span><span class="line"><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D">  // ...</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  imports: [</span></span><span class="line"><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D">    // ...</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">    GreetingModule.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">forRoot</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">({userName: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">'Miss Marple'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">}),</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  ],</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">})</span></span></code></pre>
+    </pre>
+  </div><p>The application will then display &quot;Miss Marple&quot; as the user.</p>
+<p>Remember to import <code>GreetingModule</code> as a JavaScript import, and don&#39;t add usages of <code>forRoot</code> to more than one <code>@NgModule</code> <code>imports</code> list.</p>
+
+  <h2 id="prevent-reimport-of-the-greetingmodule">
+    <a href="#prevent-reimport-of-the-greetingmodule" class="docs-anchor" tabindex="-1" aria-label="Link to Prevent reimport of the <code>GreetingModule</code>">Prevent reimport of the <code>GreetingModule</code></a>
+  </h2>
+  <p>Only the root <code>AppModule</code> should import the <code>GreetingModule</code>.
+If a lazy-loaded module imports it too, the application can generate <a href="guide/ngmodules/faq#why-is-it-bad-if-a-shared-module-provides-a-service-to-a-lazy-loaded-module?">multiple instances</a> of a service.</p>
+<p>To guard against a lazy loaded module re-importing <code>GreetingModule</code>, add the following <code>GreetingModule</code> constructor.</p>
+<div class="docs-code" header="src/app/greeting/greeting.module.ts">
+    <div class="docs-code-header"><h3>src/app/greeting/greeting.module.ts</h3></div>
+    <pre class="docs-mini-scroll-track">      <pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">constructor</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(@</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">Optional</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">() @</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">SkipSelf</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">() parentModule</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">?:</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> GreetingModule) {</span></span><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">    if</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> (parentModule) {</span></span><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">      throw</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583"> new</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> Error</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(</span></span><span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">        'GreetingModule is already loaded. Import it in the AppModule only'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">);</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">    }</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  }</span></span></code></pre>
+    </pre>
+  </div><p>The constructor tells Angular to inject the <code>GreetingModule</code> into itself.
+The injection would be circular if Angular looked for <code>GreetingModule</code> in the <em>current</em> injector, but the <code>@SkipSelf()</code> decorator means &quot;look for <code>GreetingModule</code> in an ancestor injector, above me in the injector hierarchy&quot;.</p>
+<p>By default, the injector throws an error when it can&#39;t find a requested provider.
+The <code>@Optional()</code> decorator means not finding the service is OK.
+The injector returns <code>null</code>, the <code>parentModule</code> parameter is null, and the constructor concludes uneventfully.</p>
+<p>It&#39;s a different story if you improperly import <code>GreetingModule</code> into a lazy loaded module such as <code>CustomersModule</code>.</p>
+<p>Angular creates a lazy loaded module with its own injector, a child of the root injector.
+<code>@SkipSelf()</code> causes Angular to look for a <code>GreetingModule</code> in the parent injector, which this time is the root injector.
+Of course it finds the instance imported by the root <code>AppModule</code>.
+Now <code>parentModule</code> exists and the constructor throws the error.</p>
+
+  <h2 id="more-on-ngmodules">
+    <a href="#more-on-ngmodules" class="docs-anchor" tabindex="-1" aria-label="Link to More on NgModules">More on NgModules</a>
+  </h2>
+  
+    <nav class="docs-pill-row">
+      
+    <a class="docs-pill" href="/guide/ngmodules/sharing">
+      Sharing Modules
+    </a>
+    
+    <a class="docs-pill" href="/guide/ngmodules/lazy-loading">
+      Lazy Loading Modules
+    </a>
+    
+    <a class="docs-pill" href="/guide/ngmodules/faq">
+      NgModule FAQ
+    </a>
+    
+
+    </nav>
+    

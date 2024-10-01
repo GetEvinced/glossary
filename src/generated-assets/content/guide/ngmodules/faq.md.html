@@ -1,0 +1,399 @@
+
+    <header class="docs-header">
+      <docs-breadcrumb></docs-breadcrumb>
+
+      
+  <!-- Page title -->
+  <div class="docs-page-title">
+    <h1 tabindex="-1">NgModule FAQ</h1>
+    <a class="docs-github-links" target="_blank" href="https://github.com/angular/angular/edit/main/adev/src/content/guide/ngmodules/faq.md" title="Edit this page" aria-label="Edit this page">
+      <!-- Pencil -->
+      <docs-icon role="presentation">edit</docs-icon>
+    </a>
+  </div>
+    </header>
+    <p>NgModules help organize an application into cohesive blocks of functionality.</p>
+<p>This page answers the questions many developers ask about NgModule design and implementation.</p>
+
+  <h2 id="what-classes-should-i-add-to-the-declarations-array">
+    <a href="#what-classes-should-i-add-to-the-declarations-array" class="docs-anchor" tabindex="-1" aria-label="Link to What classes should I add to the <code>declarations</code> array?">What classes should I add to the <code>declarations</code> array?</a>
+  </h2>
+  <p>Add <a href="guide/ngmodules/bootstrapping#the-declarations-array">declarable</a> classes —components, directives, and pipes— to a <code>declarations</code> list.</p>
+<p>Declare these classes in <em>exactly one</em> module of the application.
+Declare them in a module if they belong to that particular module.</p>
+
+  <h2 id="what-is-a-declarable">
+    <a href="#what-is-a-declarable" class="docs-anchor" tabindex="-1" aria-label="Link to What is a <code>declarable</code>?">What is a <code>declarable</code>?</a>
+  </h2>
+  <p>Declarables are the class types —components, directives, and pipes— that you can add to a module&#39;s <code>declarations</code> list.
+They&#39;re the only classes that you can add to <code>declarations</code>.</p>
+
+  <h2 id="what-classes-should-i-not-add-to-declarations">
+    <a href="#what-classes-should-i-not-add-to-declarations" class="docs-anchor" tabindex="-1" aria-label="Link to What classes should I <em>not</em> add to <code>declarations</code>?">What classes should I <em>not</em> add to <code>declarations</code>?</a>
+  </h2>
+  <p>Add only <a href="guide/ngmodules/bootstrapping#the-declarations-array">declarable</a> classes to an NgModule&#39;s <code>declarations</code> list.</p>
+<p>Do <em>not</em> declare the following:</p>
+
+  <ul class="docs-list">
+    <li>A class that&#39;s already declared in another module, whether an application module, <code>@NgModule</code>, or third-party module.</li>
+<li>An array of directives imported from another module.
+  For example, don&#39;t declare <code>FORMS_DIRECTIVES</code> from <code>@angular/forms</code> because the <code>FormsModule</code> already declares it.</li>
+<li>Module classes.</li>
+<li>Service classes.</li>
+<li>Non-Angular classes and objects, such as strings, numbers, functions, entity models, configurations, business logic, and helper classes.</li>
+
+  </ul>
+  
+  <h2 id="why-list-the-same-component-in-multiple-ngmodule-properties">
+    <a href="#why-list-the-same-component-in-multiple-ngmodule-properties" class="docs-anchor" tabindex="-1" aria-label="Link to Why list the same component in multiple <code>NgModule</code> properties?">Why list the same component in multiple <code>NgModule</code> properties?</a>
+  </h2>
+  <p><code>AppComponent</code> is often listed in both <code>declarations</code> and <code>bootstrap</code>.
+You might see the same component listed in <code>declarations</code> and <code>exports</code>.</p>
+<p>While that seems redundant, these properties have different functions.
+Membership in one list doesn&#39;t imply membership in another list.</p>
+
+  <ul class="docs-list">
+    <li><code>AppComponent</code> could be declared in this module but not bootstrapped.</li>
+<li><code>AppComponent</code> could be bootstrapped in this module but declared in a different feature module.</li>
+<li>A component could be imported from another application module (so you can&#39;t declare it) and re-exported by this module.</li>
+<li>A component could be exported for inclusion in an external component&#39;s template as well as dynamically loaded in a pop-up dialog.</li>
+
+  </ul>
+  
+  <h2 id="what-does-quotcant-bind-to-x-since-it-isnt-a-known-property-of-yquot-mean">
+    <a href="#what-does-quotcant-bind-to-x-since-it-isnt-a-known-property-of-yquot-mean" class="docs-anchor" tabindex="-1" aria-label="Link to What does &quot;Can&#39;t bind to &#39;x&#39; since it isn&#39;t a known property of &#39;y&#39;&quot; mean?">What does &quot;Can&#39;t bind to &#39;x&#39; since it isn&#39;t a known property of &#39;y&#39;&quot; mean?</a>
+  </h2>
+  <p>This error often means that you haven&#39;t declared the directive &quot;x&quot; or haven&#39;t imported the NgModule to which &quot;x&quot; belongs.</p>
+
+    <div class="docs-alert docs-alert-helpful">
+    <p><strong>HELPFUL:</strong> Perhaps you declared &quot;x&quot; in an application submodule but forgot to export it.
+The &quot;x&quot; class isn&#39;t visible to other modules until you add it to the <code>exports</code> list.</p>
+
+    </div>
+    
+  <h2 id="what-should-i-import">
+    <a href="#what-should-i-import" class="docs-anchor" tabindex="-1" aria-label="Link to What should I import?">What should I import?</a>
+  </h2>
+  <p>Import NgModules whose public (exported) <a href="guide/ngmodules/bootstrapping#the-declarations-array">declarable classes</a>
+you need to reference in this module&#39;s component templates.</p>
+<p>This always means importing <code>CommonModule</code> from <code>@angular/common</code> for access to
+the Angular directives such as <code>NgIf</code> and <code>NgFor</code>.
+You can import it directly or from another NgModule that <a href="#can-i-re-export-classes-and-modules?">re-exports</a> it.</p>
+<p>Import <a href="#should-i-import-browsermodule-or-commonmodule?">BrowserModule</a> only in the root <code>AppModule</code>.</p>
+<p>Import <code>FormsModule</code> from <code>@angular/forms</code> if your components have <code>[(ngModel)]</code> two-way binding expressions.</p>
+<p>Import <em>shared</em> and <em>feature</em> modules when your components use their components, directives, and pipes.</p>
+
+  <h2 id="should-i-import-browsermodule-or-commonmodule">
+    <a href="#should-i-import-browsermodule-or-commonmodule" class="docs-anchor" tabindex="-1" aria-label="Link to Should I import <code>BrowserModule</code> or <code>CommonModule</code>?">Should I import <code>BrowserModule</code> or <code>CommonModule</code>?</a>
+  </h2>
+  <p>The root application module, <code>AppModule</code>, of almost every browser application should import <code>BrowserModule</code> from <code>@angular/platform-browser</code>.
+<code>BrowserModule</code> provides services that are essential to launch and run a browser application.</p>
+<p><code>BrowserModule</code> also re-exports <code>CommonModule</code> from <code>@angular/common</code>,
+which means that components in the <code>AppModule</code> also have access to
+the Angular directives every application needs, such as <code>NgIf</code> and <code>NgFor</code>.</p>
+<p>Do not import <code>BrowserModule</code> in any other module.
+<em>Feature modules</em> and <em>lazy-loaded modules</em> should import <code>CommonModule</code> instead.
+They need the common directives.
+They don&#39;t need to re-install the app-wide providers.</p>
+
+    <div class="docs-alert docs-alert-note">
+    <p><strong>Note:</strong> Importing <code>CommonModule</code> also frees feature modules for use on <em>any</em> target platform, not just browsers.</p>
+
+    </div>
+    
+  <h2 id="what-if-i-import-the-same-module-twice">
+    <a href="#what-if-i-import-the-same-module-twice" class="docs-anchor" tabindex="-1" aria-label="Link to What if I import the same module twice?">What if I import the same module twice?</a>
+  </h2>
+  <p>That&#39;s not a problem.
+When three modules all import Module &#39;A&#39;, Angular evaluates Module &#39;A&#39; once, the first time it encounters it, and doesn&#39;t do so again.</p>
+<p>That&#39;s true at whatever level <code>A</code> appears in a hierarchy of imported NgModules.
+When Module &#39;B&#39; imports Module &#39;A&#39;, Module &#39;C&#39; imports &#39;B&#39;, and Module &#39;D&#39; imports <code>[C, B, A]</code>, then &#39;D&#39; triggers the evaluation of &#39;C&#39;, which triggers the evaluation of &#39;B&#39;, which evaluates &#39;A&#39;.
+When Angular gets to the &#39;B&#39; and &#39;A&#39; in &#39;D&#39;, they&#39;re already cached and ready to go.</p>
+<p>Angular doesn&#39;t like NgModules with circular references, so don&#39;t let Module &#39;A&#39; import Module &#39;B&#39;, which imports Module &#39;A&#39;.</p>
+
+  <h2 id="what-should-i-export">
+    <a href="#what-should-i-export" class="docs-anchor" tabindex="-1" aria-label="Link to What should I export?">What should I export?</a>
+  </h2>
+  <p>Export <a href="guide/ngmodules/bootstrapping#the-declarations-array">declarable</a> classes that components in <em>other</em> NgModules should be able to use in their templates.
+These are your <em>public</em> classes.
+If you don&#39;t export a declarable class, it stays <em>private</em>, visible only to other components declared in this NgModule.</p>
+<p>You <em>can</em> export any declarable class —components, directives, and pipes— whether
+it&#39;s declared in this NgModule or in an imported NgModule.</p>
+<p>You <em>can</em> re-export entire imported NgModules, which effectively re-export all of their exported classes.
+An NgModule can even export a module that it doesn&#39;t import.</p>
+
+  <h2 id="what-should-i-not-export">
+    <a href="#what-should-i-not-export" class="docs-anchor" tabindex="-1" aria-label="Link to What should I <em>not</em> export?">What should I <em>not</em> export?</a>
+  </h2>
+  <p>Don&#39;t export the following:</p>
+
+  <ul class="docs-list">
+    <li><p>Private components, directives, and pipes that you need only within components declared in this NgModule.
+  If you don&#39;t want another NgModule to see it, don&#39;t export it.</p>
+</li>
+<li><p>Non-declarable objects such as services, functions, configurations, and entity models.</p>
+</li>
+<li><p>Components that are only loaded dynamically by the router or by bootstrapping.
+  Such components can never be selected in another component&#39;s template.
+  While there&#39;s no harm in exporting them, there&#39;s also no benefit.</p>
+</li>
+<li><p>Pure service modules that don&#39;t have public (exported) declarations.
+  For example, there&#39;s no point in re-exporting <code>HttpClientModule</code> because it doesn&#39;t export anything.
+  Its only purpose is to add http service providers to the application as a whole.</p>
+</li>
+
+  </ul>
+  
+  <h2 id="can-i-re-export-classes-and-modules">
+    <a href="#can-i-re-export-classes-and-modules" class="docs-anchor" tabindex="-1" aria-label="Link to Can I re-export classes and modules?">Can I re-export classes and modules?</a>
+  </h2>
+  <p>Absolutely.</p>
+<p>NgModules are a great way to selectively aggregate classes from other NgModules and re-export them in a consolidated, convenience module.</p>
+<p>An NgModule can re-export entire NgModules, which effectively re-exports all of their exported classes.
+Angular&#39;s own <code>BrowserModule</code> exports a couple of NgModules like this:</p>
+<div class="docs-code">
+    
+    <pre class="docs-mini-scroll-track">      <pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">exports</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: [CommonModule, ApplicationModule]</span></span></code></pre>
+    </pre>
+  </div><p>An NgModule can export a combination of its own declarations, selected imported classes, and imported NgModules.</p>
+<p>Don&#39;t bother re-exporting pure service modules.
+Pure service modules don&#39;t export <a href="guide/ngmodules/bootstrapping#the-declarations-array">declarable</a> classes that another NgModule could use.
+For example, there&#39;s no point in re-exporting <code>HttpClientModule</code> because it doesn&#39;t export anything.
+Its only purpose is to add http service providers to the application as a whole.</p>
+
+  <h2 id="what-is-the-forroot-method">
+    <a href="#what-is-the-forroot-method" class="docs-anchor" tabindex="-1" aria-label="Link to What is the <code>forRoot()</code> method?">What is the <code>forRoot()</code> method?</a>
+  </h2>
+  <p>The <code>forRoot()</code> static method is a convention that makes it easy for developers to configure services and providers that are intended to be singletons.
+A good example of <code>forRoot()</code> is the <code>RouterModule.forRoot()</code> method.</p>
+<p>For more information on <code>forRoot()</code> see <a href="guide/ngmodules/singleton-services#the-forroot()-pattern">the <code>forRoot()</code> pattern</a> section of the <a href="guide/ngmodules/singleton-services">Singleton Services</a> guide.</p>
+
+  <h2 id="why-is-a-service-provided-in-a-feature-module-visible-everywhere">
+    <a href="#why-is-a-service-provided-in-a-feature-module-visible-everywhere" class="docs-anchor" tabindex="-1" aria-label="Link to Why is a service provided in a feature module visible everywhere?">Why is a service provided in a feature module visible everywhere?</a>
+  </h2>
+  <p>Providers listed in the <code>@NgModule.providers</code> of a bootstrapped module have application scope.
+Adding a service provider to <code>@NgModule.providers</code> effectively publishes the service to the entire application.</p>
+<p>When you import an NgModule, Angular adds the module&#39;s service providers (the contents of its <code>providers</code> list) to the application root injector.</p>
+<p>This makes the provider visible to every class in the application that knows the provider&#39;s lookup token, or name.</p>
+<p>Extensibility through NgModule imports is a primary goal of the NgModule system.
+Merging NgModule providers into the application injector makes it easy for a module library to enrich the entire application with new services.
+By adding the <code>HttpClientModule</code> once, every application component can make HTTP requests.</p>
+<p>However, this might feel like an unwelcome surprise if you expect the module&#39;s services to be visible only to the components declared by that feature module.
+If the <code>HeroModule</code> provides the <code>HeroService</code> and the root <code>AppModule</code> imports <code>HeroModule</code>, any class that knows the <code>HeroService</code> <em>type</em> can inject that service, not just the classes declared in the <code>HeroModule</code>.</p>
+<p>To limit access to a service, consider lazy loading the NgModule that provides that service.
+See <a href="#how-do-i-restrict-service-scope-to-a-module?">How do I restrict service scope to a module?</a> for more information.</p>
+
+  <h2 id="why-is-a-service-provided-in-a-lazy-loaded-module-visible-only-to-that-module">
+    <a href="#why-is-a-service-provided-in-a-lazy-loaded-module-visible-only-to-that-module" class="docs-anchor" tabindex="-1" aria-label="Link to Why is a service provided in a lazy-loaded module visible only to that module?">Why is a service provided in a lazy-loaded module visible only to that module?</a>
+  </h2>
+  <p>Unlike providers of the modules loaded at launch, providers of lazy-loaded modules are <em>module-scoped</em>.</p>
+<p>When the Angular router lazy-loads a module, it creates a new execution context.
+That <a href="#why-does-lazy-loading-create-a-child-injector?" title=Why Angular creates a child injector>context has its own injector</a>, which is a direct child of the application injector.
+The router adds the lazy module&#39;s providers and the providers of its imported NgModules to this child injector.</p>
+<p>These providers are insulated from changes to application providers with the same lookup token.
+When the router creates a component within the lazy-loaded context,
+Angular prefers service instances created from these providers to the service instances of the application root injector.</p>
+
+  <h2 id="what-if-two-modules-provide-the-same-service">
+    <a href="#what-if-two-modules-provide-the-same-service" class="docs-anchor" tabindex="-1" aria-label="Link to What if two modules provide the same service?">What if two modules provide the same service?</a>
+  </h2>
+  <p>When two imported modules, loaded at the same time, list a provider with the same token, the second module&#39;s provider &quot;wins&quot;.
+That&#39;s because both providers are added to the same injector.</p>
+<p>When Angular looks to inject a service for that token, it creates and delivers the instance created by the second provider.</p>
+<p><em>Every</em> class that injects this service gets the instance created by the second provider.
+Even classes declared within the first module get the instance created by the second provider.</p>
+<p>If NgModule A provides a service for token &#39;X&#39; and imports an NgModule B that also provides a service for token &#39;X&#39;, then NgModule A&#39;s service definition &quot;wins&quot;.</p>
+<p>The service provided by the root <code>AppModule</code> takes precedence over services provided by imported NgModules.
+The <code>AppModule</code> always wins.</p>
+
+  <h2 id="how-do-i-restrict-service-scope-to-a-module">
+    <a href="#how-do-i-restrict-service-scope-to-a-module" class="docs-anchor" tabindex="-1" aria-label="Link to How do I restrict service scope to a module?">How do I restrict service scope to a module?</a>
+  </h2>
+  <p>When a module is loaded at application launch, its <code>@NgModule.providers</code> have <em>application-wide scope</em>; that is, they are available for injection throughout the application.</p>
+<p>Imported providers are easily replaced by providers from another imported NgModule.
+Such replacement might be by design.
+It could be unintentional and have adverse consequences.</p>
+<p>As a general rule, import modules with providers <em>exactly once</em>, preferably in the application&#39;s <em>root module</em>.
+That&#39;s also usually the best place to configure, wrap, and override them.</p>
+<p>Suppose a module requires a customized <code>HttpBackend</code> that adds a special header for all Http requests.
+If another module elsewhere in the application also customizes <code>HttpBackend</code> or merely imports the <code>HttpClientModule</code>, it could override this module&#39;s <code>HttpBackend</code> provider, losing the special header.
+The server will reject http requests from this module.</p>
+<p>To avoid this problem, import the <code>HttpClientModule</code> only in the <code>AppModule</code>, the application <em>root module</em>.</p>
+<p>If you must guard against this kind of &quot;provider corruption&quot;, <em>don&#39;t rely on a launch-time module&#39;s <code>providers</code></em>.</p>
+<p>Load the module lazily if you can.
+Angular gives a <a href="#why-is-a-service-provided-in-a-lazy-loaded-module-visible-only-to-that-module?">lazy-loaded module</a> its own child injector.
+The module&#39;s providers are visible only within the component tree created with this injector.</p>
+
+  <h3 id="alternative-restricting-scope-to-a-component-and-its-children">
+    <a href="#alternative-restricting-scope-to-a-component-and-its-children" class="docs-anchor" tabindex="-1" aria-label="Link to Alternative: Restricting scope to a component and its children">Alternative: Restricting scope to a component and its children</a>
+  </h3>
+  <p>Continuing with the same example, suppose the components of a module truly require a private, custom <code>HttpBackend</code>.</p>
+<p>Create a &quot;top component&quot; that acts as the root for all of the module&#39;s components.
+Add the custom <code>HttpBackend</code> provider to the top component&#39;s <code>providers</code> list rather than the module&#39;s <code>providers</code>.
+Recall that Angular creates a child injector for each component instance and populates the injector with the component&#39;s own providers.</p>
+<p>When a child of this component asks for the <code>HttpBackend</code> service,
+Angular provides the local <code>HttpBackend</code> service, not the version provided in the application root injector.
+Child components can then make configured HTTP requests no matter how other modules configure <code>HttpBackend</code>.</p>
+<p>Make sure to create components needing access to this special-configuration <code>HttpBackend</code> as children of this component.</p>
+<p>You can embed the child components in the top component&#39;s template.
+Alternatively, make the top component a routing host by giving it a <code>&lt;router-outlet&gt;</code>.
+Define child routes and let the router load module components into that outlet.</p>
+<p>Though you can limit access to a service by providing it in a lazy loaded module or providing it in a component, providing services in a component can lead to multiple instances of those services.
+Thus, the lazy loading is preferable.</p>
+
+  <h2 id="should-i-add-application-wide-providers-to-the-root-appmodule-or-the-root-appcomponent">
+    <a href="#should-i-add-application-wide-providers-to-the-root-appmodule-or-the-root-appcomponent" class="docs-anchor" tabindex="-1" aria-label="Link to Should I add application-wide providers to the root <code>AppModule</code> or the root <code>AppComponent</code>?">Should I add application-wide providers to the root <code>AppModule</code> or the root <code>AppComponent</code>?</a>
+  </h2>
+  <p>Define application-wide providers by specifying <code>providedIn: &#39;root&#39;</code> on its <code>@Injectable()</code> decorator (in the case of services) or at <code>InjectionToken</code> construction (in the case where tokens are provided).
+Providers that are created this way automatically are made available to the entire application and don&#39;t need to be listed in any module.</p>
+<p>If a provider cannot be configured in this way (perhaps because it has no sensible default value), then register application-wide providers in the root <code>AppModule</code>, not in the <code>AppComponent</code>.</p>
+<p>Lazy-loaded modules and their components can inject <code>AppModule</code> services; they can&#39;t inject <code>AppComponent</code> services.</p>
+<p>Register a service in <code>AppComponent</code> providers <em>only</em> if the service must be hidden
+from components outside the <code>AppComponent</code> tree.
+This is a rare use case.</p>
+<p>More generally, <a href="#should-i-add-other-providers-to-a-module-or-a-component?">prefer registering providers in NgModules</a> to registering in components.</p>
+
+  <h3 id="discussion">
+    <a href="#discussion" class="docs-anchor" tabindex="-1" aria-label="Link to Discussion">Discussion</a>
+  </h3>
+  <p>Angular registers all startup module providers with the application root injector.
+The services that root injector providers create have application scope, which means they are available to the entire application.</p>
+<p>Certain services, such as the <code>Router</code>, only work when you register them in the application root injector.</p>
+<p>By contrast, Angular registers <code>AppComponent</code> providers with the <code>AppComponent</code>&#39;s own injector.
+<code>AppComponent</code> services are available only to that component and its component tree.
+They have component scope.</p>
+<p>The <code>AppComponent</code>&#39;s injector is a child of the root injector, one down in the injector hierarchy.
+For applications that don&#39;t use the router, that&#39;s almost the entire application.
+But in routed applications, routing operates at the root level where <code>AppComponent</code> services don&#39;t exist.
+This means that lazy-loaded modules can&#39;t reach them.</p>
+
+  <h2 id="should-i-add-other-providers-to-a-module-or-a-component">
+    <a href="#should-i-add-other-providers-to-a-module-or-a-component" class="docs-anchor" tabindex="-1" aria-label="Link to Should I add other providers to a module or a component?">Should I add other providers to a module or a component?</a>
+  </h2>
+  <p>Providers should be configured using <code>@Injectable</code> syntax.
+If possible, they should be provided in the application root (<code>providedIn: &#39;root&#39;</code>).
+Services that are configured this way are lazily loaded if they are only used from a lazily loaded context.</p>
+<p>If it&#39;s the consumer&#39;s decision whether a provider is available application-wide or not, then register providers in modules (<code>@NgModule.providers</code>) instead of registering in components (<code>@Component.providers</code>).</p>
+<p>Register a provider with a component when you <em>must</em> limit the scope of a service instance to that component and its component tree.
+Apply the same reasoning to registering a provider with a directive.</p>
+<p>For example, an editing component that needs a private copy of a caching service should register the service with the component.
+Then each new instance of the component gets its own cached service instance.
+The changes that editor makes in its service don&#39;t touch the instances elsewhere in the application.</p>
+<p><a href="#should-i-add-application-wide-providers-to-the-root-appmodule-or-the-root-appcomponent?">Always register <em>application-wide</em> services with the root <code>AppModule</code></a>, not the root <code>AppComponent</code>.</p>
+
+  <h2 id="why-is-it-bad-if-a-shared-module-provides-a-service-to-a-lazy-loaded-module">
+    <a href="#why-is-it-bad-if-a-shared-module-provides-a-service-to-a-lazy-loaded-module" class="docs-anchor" tabindex="-1" aria-label="Link to Why is it bad if a shared module provides a service to a lazy-loaded module?">Why is it bad if a shared module provides a service to a lazy-loaded module?</a>
+  </h2>
+  
+  <h3 id="the-eagerly-loaded-scenario">
+    <a href="#the-eagerly-loaded-scenario" class="docs-anchor" tabindex="-1" aria-label="Link to The eagerly loaded scenario">The eagerly loaded scenario</a>
+  </h3>
+  <p>When an eagerly loaded module provides a service, for example a <code>UserService</code>, that service is available application-wide.
+If the root module provides <code>UserService</code> and imports another module that provides the same <code>UserService</code>, Angular registers one of them in the root application injector (see <a href="#what-if-i-import-the-same-module-twice?">What if I import the same module twice?</a>).</p>
+<p>Then, when some component injects <code>UserService</code>, Angular finds it in the application root injector, and delivers the app-wide singleton service.
+No problem.</p>
+
+  <h3 id="the-lazy-loaded-scenario">
+    <a href="#the-lazy-loaded-scenario" class="docs-anchor" tabindex="-1" aria-label="Link to The lazy loaded scenario">The lazy loaded scenario</a>
+  </h3>
+  <p>Now consider a lazy loaded module that also provides a service called <code>UserService</code>.</p>
+<p>When the router lazy loads a module, it creates a child injector and registers the <code>UserService</code> provider with that child injector.
+The child injector is <em>not</em> the root injector.</p>
+<p>When Angular creates a lazy component for that module and injects <code>UserService</code>, it finds a <code>UserService</code> provider in the lazy module&#39;s <em>child injector</em>
+and creates a <em>new</em> instance of the <code>UserService</code>.
+This is an entirely different <code>UserService</code> instance than the app-wide singleton version that Angular injected in one of the eagerly loaded components.</p>
+<p>This scenario causes your application to create a new instance every time, instead of using the singleton.</p>
+
+  <h2 id="why-does-lazy-loading-create-a-child-injector">
+    <a href="#why-does-lazy-loading-create-a-child-injector" class="docs-anchor" tabindex="-1" aria-label="Link to Why does lazy loading create a child injector?">Why does lazy loading create a child injector?</a>
+  </h2>
+  <p>Angular adds <code>@NgModule.providers</code> to the application root injector, unless the NgModule is lazy-loaded.
+For a lazy-loaded NgModule, Angular creates a <em>child injector</em> and adds the module&#39;s providers to the child injector.</p>
+<p>This means that an NgModule behaves differently depending on whether it&#39;s loaded during application start or lazy-loaded later.
+Neglecting that difference can lead to <a href="#why-is-it-bad-if-a-shared-module-provides-a-service-to-a-lazy-loaded-module?">adverse consequences</a>.</p>
+<p>Why doesn&#39;t Angular add lazy-loaded providers to the application root injector as it does for eagerly loaded NgModules?</p>
+<p>The answer is grounded in a fundamental characteristic of the Angular dependency-injection system.
+An injector can add providers <em>until it&#39;s first used</em>.
+Once an injector starts creating and delivering services, its provider list is frozen; no new providers are allowed.</p>
+<p>When an application starts, Angular first configures the root injector with the providers of all eagerly loaded NgModules <em>before</em> creating its first component and injecting any of the provided services.
+Once the application begins, the application root injector is closed to new providers.</p>
+<p>Time passes and application logic triggers lazy loading of an NgModule.
+Angular must add the lazy-loaded module&#39;s providers to an injector somewhere.
+It can&#39;t add them to the application root injector because that injector is closed to new providers.
+So Angular creates a new child injector for the lazy-loaded module context.</p>
+
+  <h2 id="how-can-i-tell-if-an-ngmodule-or-service-was-previously-loaded">
+    <a href="#how-can-i-tell-if-an-ngmodule-or-service-was-previously-loaded" class="docs-anchor" tabindex="-1" aria-label="Link to How can I tell if an NgModule or service was previously loaded?">How can I tell if an NgModule or service was previously loaded?</a>
+  </h2>
+  <p>Some NgModules and their services should be loaded only once by the root <code>AppModule</code>.
+Importing the module a second time by lazy loading a module could <a href="#why-is-it-bad-if-a-shared-module-provides-a-service-to-a-lazy-loaded-module?">produce errant behavior</a> that may be difficult to detect and diagnose.</p>
+<p>To prevent this issue, write a constructor that attempts to inject the module or service from the root application injector.
+If the injection succeeds, the class has been loaded a second time.
+You can throw an error or take other remedial action.</p>
+<p>Certain NgModules, such as <code>BrowserModule</code>, implement such a guard.
+Here is a custom constructor for an NgModule called <code>GreetingModule</code>.</p>
+<div class="docs-code" header="src/app/greeting/greeting.module.ts">
+    <div class="docs-code-header"><h3>src/app/greeting/greeting.module.ts</h3></div>
+    <pre class="docs-mini-scroll-track">      <pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">@</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">NgModule</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">({</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">...</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">})</span></span><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">export</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583"> class</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> GreetingModule</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> {</span></span><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">  constructor</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(@</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">Optional</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">() @</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">SkipSelf</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">() </span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70">parentModule</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">?:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> GreetingModule</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">) {</span></span><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">    if</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> (parentModule) {</span></span><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">      throw</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583"> new</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> Error</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(</span></span><span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">        'GreetingModule is already loaded. Import it in the AppModule only'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">);</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">    }</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  }</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre>
+    </pre>
+  </div>
+  <h2 id="what-kinds-of-modules-should-i-have-and-how-should-i-use-them">
+    <a href="#what-kinds-of-modules-should-i-have-and-how-should-i-use-them" class="docs-anchor" tabindex="-1" aria-label="Link to What kinds of modules should I have and how should I use them?">What kinds of modules should I have and how should I use them?</a>
+  </h2>
+  <p>Every application is different.
+Developers have various levels of experience and comfort with the available choices.
+Some suggestions and guidelines appear to have wide appeal.</p>
+
+  <h3 id="sharedmodule">
+    <a href="#sharedmodule" class="docs-anchor" tabindex="-1" aria-label="Link to <code>SharedModule</code>"><code>SharedModule</code></a>
+  </h3>
+  <p><code>SharedModule</code> is a conventional name for an <code>NgModule</code> with the components, directives, and pipes that you use everywhere in your application.
+This module should consist entirely of <code>declarations</code>, most of them exported.</p>
+<p>The <code>SharedModule</code> may re-export other widget modules, such as <code>CommonModule</code>, <code>FormsModule</code>, and NgModules with the UI controls that you use most widely.</p>
+<p>The <code>SharedModule</code> should not have <code>providers</code> for reasons <a href="#why-is-it-bad-if-a-shared-module-provides-a-service-to-a-lazy-loaded-module?">explained previously</a>.
+Nor should any of its imported or re-exported modules have <code>providers</code>.</p>
+<p>Import the <code>SharedModule</code> in your <em>feature</em> modules.</p>
+
+  <h3 id="feature-modules">
+    <a href="#feature-modules" class="docs-anchor" tabindex="-1" aria-label="Link to Feature Modules">Feature Modules</a>
+  </h3>
+  <p>Feature modules are modules you create around specific application business domains, user workflows, and utility collections.
+They support your application by containing a particular feature, such as routes, services, widgets, etc.
+To conceptualize what a feature module might be in your app, consider that if you would put the files related to a certain functionality, like a search, in one folder, that the contents of that folder would be a feature module that you might call your <code>SearchModule</code>.
+It would contain all of the components, routing, and templates that would make up the search functionality.</p>
+<p>For more information, see <a href="guide/ngmodules/feature-modules">Feature Modules</a> and <a href="guide/ngmodules/module-types">Module Types</a></p>
+
+  <h2 id="whats-the-difference-between-ngmodules-and-javascript-modules">
+    <a href="#whats-the-difference-between-ngmodules-and-javascript-modules" class="docs-anchor" tabindex="-1" aria-label="Link to What&#39;s the difference between NgModules and JavaScript Modules?">What&#39;s the difference between NgModules and JavaScript Modules?</a>
+  </h2>
+  <p>In an Angular app, NgModules and JavaScript modules work together.</p>
+<p>In modern JavaScript, every file is a module (see the <a href="https://exploringjs.com/es6/ch_modules.html" target="_blank">Modules</a> page of the Exploring ES6 website).
+Within each file you write an <code>export</code> statement to make parts of the module public.</p>
+<p>An Angular NgModule is a class with the <code>@NgModule</code> decorator —JavaScript modules don&#39;t have to have the <code>@NgModule</code> decorator.
+Angular&#39;s <code>NgModule</code> has <code>imports</code> and <code>exports</code> and they serve a similar purpose.</p>
+<p>You <em>import</em> other NgModules so you can use their exported classes in component templates.
+You <em>export</em> this NgModule&#39;s classes so they can be imported and used by components of <em>other</em> NgModules.</p>
+<p>For more information, see <a href="guide/ngmodules/vs-jsmodule">JavaScript Modules vs. NgModules</a>.</p>
+
+  <h2 id="what-is-a-template-reference">
+    <a href="#what-is-a-template-reference" class="docs-anchor" tabindex="-1" aria-label="Link to What is a template reference?">What is a template reference?</a>
+  </h2>
+  <p>How does Angular find components, directives, and pipes in a template?</p>
+<p>The <a href="#what-is-the-angular-compiler?">Angular compiler</a> looks inside component templates for other components, directives, and pipes.
+When it finds one, that&#39;s a template reference.</p>
+<p>The Angular compiler finds a component or directive in a template when it can match the <em>selector</em> of that component or directive to some HTML in that template.</p>
+<p>The compiler finds a pipe if the pipe&#39;s <em>name</em> appears within the pipe syntax of the template HTML.</p>
+<p>Angular only matches selectors and pipe names for classes that are declared by this module or exported by a module that this module imports.</p>
+
+  <h2 id="what-is-the-angular-compiler">
+    <a href="#what-is-the-angular-compiler" class="docs-anchor" tabindex="-1" aria-label="Link to What is the Angular compiler?">What is the Angular compiler?</a>
+  </h2>
+  <p>The Angular compiler converts the application code you write into highly performant JavaScript code.
+The <code>@NgModule</code> metadata plays an important role in guiding the compilation process.</p>
+<p>The code you write isn&#39;t immediately executable.
+For example, components have templates that contain custom elements, attribute directives, Angular binding declarations, and some peculiar syntax that clearly isn&#39;t native HTML.</p>
+<p>The Angular compiler reads the template markup, combines it with the corresponding component class code, and emits <em>component factories</em>.</p>
+<p>A component factory creates a pure, 100% JavaScript representation of the component that incorporates everything described in its <code>@Component</code> metadata:
+The HTML, the binding instructions, the attached styles.</p>
+<p>Because directives and pipes appear in component templates, the Angular compiler incorporates them into compiled component code too.</p>
+<p><code>@NgModule</code> metadata tells the Angular compiler what components to compile for this module and how to link this module with other modules.</p>

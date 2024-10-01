@@ -1,0 +1,239 @@
+
+    <header class="docs-header">
+      <docs-breadcrumb></docs-breadcrumb>
+
+      
+  <!-- Page title -->
+  <div class="docs-page-title">
+    <h1 tabindex="-1">Deferrable Views</h1>
+    <a class="docs-github-links" target="_blank" href="https://github.com/angular/angular/edit/main/adev/src/content/guide/defer.md" title="Edit this page" aria-label="Edit this page">
+      <!-- Pencil -->
+      <docs-icon role="presentation">edit</docs-icon>
+    </a>
+  </div>
+    </header>
+    
+  <h2 id="overview">
+    <a href="#overview" class="docs-anchor" tabindex="-1" aria-label="Link to Overview">Overview</a>
+  </h2>
+  <p>Deferrable views can be used in component template to defer the loading of select dependencies within that template. Those dependencies include components, directives, and pipes, and any associated CSS. To use this feature, you can declaratively wrap a section of your template in a <code>@defer</code> block which specifies the loading conditions.</p>
+<p>Deferrable views support a series of <a href="guide/defer#triggers">triggers</a>, <a href="guide/defer#prefetching">prefetching</a>, and several sub blocks used for <a href="guide/defer#placeholder">placeholder</a>, <a href="guide/defer#loading">loading</a>, and <a href="guide/defer#error">error</a> state management. You can also create custom conditions with <a href="guide/defer#when"><code>when</code></a> and <a href="guide/defer#prefetching"><code>prefetch when</code></a>.</p>
+<div class="docs-code">
+    
+    <pre class="docs-mini-scroll-track">      <pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">@defer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> {</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  &lt;</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D">large-component</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> /&gt;</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre>
+    </pre>
+  </div>
+  <h2 id="why-use-deferrable-views">
+    <a href="#why-use-deferrable-views" class="docs-anchor" tabindex="-1" aria-label="Link to Why use Deferrable Views?">Why use Deferrable Views?</a>
+  </h2>
+  <p>Deferrable views, also known as <code>@defer</code> blocks, are a powerful tool that can be used to reduce the initial bundle size of your application or defer heavy components that may not ever be loaded until a later time. This should result in a faster initial load and an improvement in your Core Web Vitals (CWV) results. Deferring some of your components until later should specifically improve Largest Contentful Paint (LCP) and Time to First Byte (TTFB).</p>
+
+    <div class="docs-alert docs-alert-note">
+    <p><strong>Note:</strong> It is highly recommended that any defer loaded component that might result in layout shift once the dependencies have loaded be below the fold or otherwise not yet visible to the user.</p>
+
+    </div>
+    
+  <h2 id="which-dependencies-are-defer-loadable">
+    <a href="#which-dependencies-are-defer-loadable" class="docs-anchor" tabindex="-1" aria-label="Link to Which dependencies are defer-loadable?">Which dependencies are defer-loadable?</a>
+  </h2>
+  <p>In order for dependencies within a <code>@defer</code> block to be deferred, they need to meet two conditions:</p>
+
+    <ol class="docs-ordered-list">
+      <li><p>They must be standalone. Non-standalone dependencies cannot be deferred and will still be eagerly loaded, even inside of <code>@defer</code> blocks.</p>
+</li>
+<li><p>They must not be directly referenced from the same file, outside of <code>@defer</code> blocks; this includes ViewChild queries.</p>
+</li>
+
+    </ol>
+    <p>Transitive dependencies of the components, directives, and pipes used in the defer block can be standalone or NgModule based and will still be deferred.</p>
+
+  <h2 id="blocks">
+    <a href="#blocks" class="docs-anchor" tabindex="-1" aria-label="Link to Blocks">Blocks</a>
+  </h2>
+  <p><code>@defer</code> blocks have several sub blocks to allow you to gracefully handle different stages in the deferred loading process.</p>
+
+  <h3 id="defer">
+    <a href="#defer" class="docs-anchor" tabindex="-1" aria-label="Link to <code>@defer</code>"><code>@defer</code></a>
+  </h3>
+  <p>The content of the main <code>@defer</code> block is the section of content that is lazily loaded. It will not be rendered initially, and all of the content will appear once the specified <a href="guide/defer#triggers">trigger</a> or <code>when</code> condition is met and the dependencies have been fetched. By default, a <code>@defer</code> block is triggered when the browser state becomes <a href="guide/defer#on-idle">idle</a>.</p>
+
+  <h3 id="placeholder">
+    <a href="#placeholder" class="docs-anchor" tabindex="-1" aria-label="Link to <code>@placeholder</code>"><code>@placeholder</code></a>
+  </h3>
+  <p>By default, defer blocks do not render any content before they are triggered. The <code>@placeholder</code> is an optional block that declares content to show before the defer block is triggered. This placeholder content is replaced with the main content once the loading is complete. You can use any content in the placeholder section including plain HTML, components, directives, and pipes; however keep in mind the dependencies of the placeholder block are eagerly loaded.</p>
+
+    <div class="docs-alert docs-alert-note">
+    <p><strong>Note:</strong> For the best user experience, you should always specify a <code>@placeholder</code> block.</p>
+
+    </div>
+    <p>The <code>@placeholder</code> block accepts an optional parameter to specify the <code>minimum</code> amount of time that this placeholder should be shown. This <code>minimum</code> parameter is specified in time increments of milliseconds (ms) or seconds (s). This parameter exists to prevent fast flickering of placeholder content in the case that the deferred dependencies are fetched quickly. The <code>minimum</code> timer for the <code>@placeholder</code> block begins after the initial render of this <code>@placeholder</code> block completes.</p>
+<div class="docs-code">
+    
+    <pre class="docs-mini-scroll-track">      <pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">@defer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> {</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  &lt;</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D">large-component</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> /&gt;</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">} </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">@placeholder</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> (minimum 500ms) {</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  &lt;</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D">p</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&gt;Placeholder content&lt;/</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D">p</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&gt;</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre>
+    </pre>
+  </div>
+    <div class="docs-alert docs-alert-note">
+    <p><strong>Note:</strong> Certain triggers may require the presence of either a <code>@placeholder</code> or a <a href="guide/templates/variables#template-reference-variables">template reference variable</a> to function. See the <a href="guide/defer#triggers">Triggers</a> section for more details.</p>
+
+    </div>
+    
+  <h3 id="loading">
+    <a href="#loading" class="docs-anchor" tabindex="-1" aria-label="Link to <code>@loading</code>"><code>@loading</code></a>
+  </h3>
+  <p>The <code>@loading</code> block is an optional block that allows you to declare content that will be shown during the loading of any deferred dependencies. Its dependences are eagerly loaded (similar to <code>@placeholder</code>).</p>
+<p>For example, you could show a loading spinner. Once loading has been triggered, the <code>@loading</code> block replaces the <code>@placeholder</code> block.</p>
+<p>The <code>@loading</code> block accepts two optional parameters to specify the <code>minimum</code> amount of time that this placeholder should be shown and amount of time to wait <code>after</code> loading begins before showing the loading template. <code>minimum</code> and <code>after</code> parameters are specified in time increments of milliseconds (ms) or seconds (s). Just like <code>@placeholder</code>, these parameters exist to prevent fast flickering of content in the case that the deferred dependencies are fetched quickly. Both the <code>minimum</code> and <code>after</code> timers for the <code>@loading</code> block begins immediately after the loading has been triggered.</p>
+<div class="docs-code">
+    
+    <pre class="docs-mini-scroll-track">      <pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">@defer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> {</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  &lt;</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D">large-component</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> /&gt;</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">} </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">@loading</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> (after 100ms; minimum 1s) {</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  &lt;</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D">img</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> alt</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">=</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"loading..."</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> src</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">=</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"loading.gif"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> /&gt;</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre>
+    </pre>
+  </div>
+  <h3 id="error">
+    <a href="#error" class="docs-anchor" tabindex="-1" aria-label="Link to <code>@error</code>"><code>@error</code></a>
+  </h3>
+  <p>The <code>@error</code> block allows you to declare content that will be shown if deferred loading fails. Similar to <code>@placeholder</code> and <code>@loading</code>, the dependencies of the <code>@error</code> block are eagerly loaded. The <code>@error</code> block is optional.</p>
+<div class="docs-code">
+    
+    <pre class="docs-mini-scroll-track">      <pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">@defer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> {</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  &lt;</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D">calendar-cmp</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> /&gt;</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">} </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">@error</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> {</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  &lt;</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D">p</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&gt;Failed to load the calendar&lt;/</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D">p</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&gt;</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre>
+    </pre>
+  </div>
+  <h2 id="triggers">
+    <a href="#triggers" class="docs-anchor" tabindex="-1" aria-label="Link to Triggers">Triggers</a>
+  </h2>
+  <p>When a <code>@defer</code> block is triggered, it replaces placeholder content with lazily loaded content. There are two options for configuring when this swap is triggered: <code>on</code> and <code>when</code>.</p>
+<p><a id="on"></a>
+<code>on</code> specifies a trigger condition using a trigger from the list of available triggers below. An example would be on interaction or on viewport.</p>
+<p>Multiple event triggers can be defined at once. For example: <code>on interaction; on timer(5s)</code> means that the defer block will be triggered if the user interacts with the placeholder, or after 5 seconds.</p>
+
+    <div class="docs-alert docs-alert-note">
+    <p><strong>Note:</strong> Multiple <code>on</code> triggers are always OR conditions. Similarly, <code>on</code> mixed with <code>when</code> conditions are also OR conditions.</p>
+
+    </div>
+    <div class="docs-code">
+    
+    <pre class="docs-mini-scroll-track">      <pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">@defer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> (on viewport; on </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">timer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(5s)) {</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  &lt;</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D">calendar-cmp</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> /&gt;</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">} </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">@placeholder</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> {</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  &lt;</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D">img</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> src</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">=</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"placeholder.png"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> /&gt;</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre>
+    </pre>
+  </div><p><a id="when"></a>
+<code>when</code> specifies a condition as an expression that returns a boolean. When this expression becomes truthy, the placeholder is swapped with the lazily loaded content (which may be an asynchronous operation if the dependencies need to be fetched).</p>
+
+    <div class="docs-alert docs-alert-note">
+    <p><strong>Note:</strong> if the <code>when</code> condition switches back to <code>false</code>, the defer block is not reverted back to the placeholder. The swap is a one-time operation. If the content within the block should be conditionally rendered, an <code>if</code> condition can be used within the block itself.</p>
+
+    </div>
+    <div class="docs-code">
+    
+    <pre class="docs-mini-scroll-track">      <pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">@defer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> (when cond) {</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  &lt;</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D">calendar-cmp</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> /&gt;</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre>
+    </pre>
+  </div><p>You could also use both <code>when</code> and <code>on</code> together in one statement, and the swap will be triggered if either condition is met.</p>
+<div class="docs-code">
+    
+    <pre class="docs-mini-scroll-track">      <pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">@defer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> (on viewport; when cond) {</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  &lt;</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D">calendar-cmp</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> /&gt;</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">} </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">@placeholder</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> {</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  &lt;</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D">img</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> src</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">=</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"placeholder.png"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> /&gt;</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre>
+    </pre>
+  </div>
+  <h3 id="on-idle">
+    <a href="#on-idle" class="docs-anchor" tabindex="-1" aria-label="Link to on idle">on idle</a>
+  </h3>
+  <p><code>idle</code> will trigger the deferred loading once the browser has reached an idle state (detected using the <code>requestIdleCallback</code> API under the hood). This is the default behavior with a defer block.</p>
+
+  <h3 id="on-viewport">
+    <a href="#on-viewport" class="docs-anchor" tabindex="-1" aria-label="Link to on viewport">on viewport</a>
+  </h3>
+  <p><code>viewport</code> would trigger the deferred block when the specified content enters the viewport using the <a href="https://developer.mozilla.org/docs/Web/API/Intersection_Observer_API" target="_blank"><code>IntersectionObserver</code> API</a>. This could be the placeholder content or an element reference.</p>
+<p>By default, the placeholder will act as the element watched for entering viewport as long as it is a single root element node.</p>
+<div class="docs-code">
+    
+    <pre class="docs-mini-scroll-track">      <pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">@defer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> (on viewport) {</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  &lt;</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D">calendar-cmp</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> /&gt;</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">} </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">@placeholder</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> {</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  &lt;</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D">div</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&gt;Calendar placeholder&lt;/</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D">div</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&gt;</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre>
+    </pre>
+  </div><p>Alternatively, you can specify a <a href="guide/templates/variables#template-reference-variables">template reference variable</a> in the same template as the <code>@defer</code> block as the element that is watched to enter the viewport. This variable is passed in as a parameter on the viewport trigger.</p>
+<div class="docs-code">
+    
+    <pre class="docs-mini-scroll-track">      <pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&lt;</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D">div</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> #greeting</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&gt;Hello!&lt;/</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D">div</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&gt;</span></span><span class="line"></span><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">@defer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> (on </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">viewport</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(greeting)) {</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  &lt;</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D">greetings-cmp</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> /&gt;</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre>
+    </pre>
+  </div>
+  <h3 id="on-interaction">
+    <a href="#on-interaction" class="docs-anchor" tabindex="-1" aria-label="Link to on interaction">on interaction</a>
+  </h3>
+  <p><code>interaction</code> will trigger the deferred block when the user interacts with the specified element through <code>click</code> or <code>keydown</code> events.</p>
+<p>By default, the placeholder will act as the interaction element as long as it is a single root element node.</p>
+<div class="docs-code">
+    
+    <pre class="docs-mini-scroll-track">      <pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">@defer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> (on interaction) {</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  &lt;</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D">calendar-cmp</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> /&gt;</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">} </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">@placeholder</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> {</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  &lt;</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D">div</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&gt;Calendar placeholder&lt;/</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D">div</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&gt;</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre>
+    </pre>
+  </div><p>Alternatively, you can specify a <a href="guide/templates/variables#template-reference-variables">template reference variable</a> as the element that triggers interaction. This variable is passed in as a parameter on the interaction trigger.</p>
+<div class="docs-code">
+    
+    <pre class="docs-mini-scroll-track">      <pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&lt;</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D">button</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> type</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">=</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"button"</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> #greeting</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&gt;Hello!&lt;/</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D">button</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&gt;</span></span><span class="line"></span><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">@defer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> (on </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">interaction</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(greeting)) {</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  &lt;</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D">calendar-cmp</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> /&gt;</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">} </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">@placeholder</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> {</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  &lt;</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D">div</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&gt;Calendar placeholder&lt;/</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D">div</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&gt;</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre>
+    </pre>
+  </div>
+  <h3 id="on-hover">
+    <a href="#on-hover" class="docs-anchor" tabindex="-1" aria-label="Link to on hover">on hover</a>
+  </h3>
+  <p><code>hover</code> triggers deferred loading when the mouse has hovered over the trigger area. Events used for this are <code>mouseenter</code> and <code>focusin</code>.</p>
+<p>By default, the placeholder will act as the hover element as long as it is a single root element node.</p>
+<div class="docs-code">
+    
+    <pre class="docs-mini-scroll-track">      <pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">@defer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> (on hover) {</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  &lt;</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D">calendar-cmp</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> /&gt;</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">} </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">@placeholder</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> {</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  &lt;</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D">div</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&gt;Calendar placeholder&lt;/</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D">div</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&gt;</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre>
+    </pre>
+  </div><p>Alternatively, you can specify a <a href="guide/templates/variables#template-reference-variables">template reference variable</a> as the hover element. This variable is passed in as a parameter on the hover trigger.</p>
+<div class="docs-code">
+    
+    <pre class="docs-mini-scroll-track">      <pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&lt;</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D">div</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> #greeting</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&gt;Hello!&lt;/</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D">div</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&gt;</span></span><span class="line"></span><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">@defer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> (on </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">hover</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(greeting)) {</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  &lt;</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D">calendar-cmp</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> /&gt;</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">} </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">@placeholder</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> {</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  &lt;</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D">div</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&gt;Calendar placeholder&lt;/</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D">div</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&gt;</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre>
+    </pre>
+  </div>
+  <h3 id="on-immediate">
+    <a href="#on-immediate" class="docs-anchor" tabindex="-1" aria-label="Link to on immediate">on immediate</a>
+  </h3>
+  <p><code>immediate</code> triggers the deferred load immediately, meaning once the client has finished rendering, the defer chunk would then start fetching right away.</p>
+<div class="docs-code">
+    
+    <pre class="docs-mini-scroll-track">      <pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">@defer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> (on immediate) {</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  &lt;</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D">calendar-cmp</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> /&gt;</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">} </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">@placeholder</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> {</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  &lt;</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D">div</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&gt;Calendar placeholder&lt;/</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D">div</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&gt;</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre>
+    </pre>
+  </div>
+  <h3 id="on-timer">
+    <a href="#on-timer" class="docs-anchor" tabindex="-1" aria-label="Link to on timer">on timer</a>
+  </h3>
+  <p><code>timer(x)</code> would trigger after a specified duration. The duration is required and can be specified in <code>ms</code> or <code>s</code>.</p>
+<div class="docs-code">
+    
+    <pre class="docs-mini-scroll-track">      <pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">@defer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> (on </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">timer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(500ms)) {</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  &lt;</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D">calendar-cmp</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> /&gt;</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre>
+    </pre>
+  </div>
+  <h2 id="prefetching">
+    <a href="#prefetching" class="docs-anchor" tabindex="-1" aria-label="Link to Prefetching">Prefetching</a>
+  </h2>
+  <p><code>@defer</code> allows to specify conditions when prefetching of the dependencies should be triggered. You can use a special <code>prefetch</code> keyword. <code>prefetch</code> syntax works similarly to the main defer conditions, and accepts <code>when</code> and/or <code>on</code> to declare the trigger.</p>
+<p>In this case, <code>when</code> and <code>on</code> associated with defer controls when to render, and <code>prefetch when</code> and <code>prefetch on</code> controls when to fetch the resources. This enables more advanced behaviors, such as letting you start to prefetch resources before a user has actually seen or interacted with a defer block, but might interact with it soon, making the resources available faster.</p>
+<p>In the example below, the prefetching starts when a browser becomes idle and the contents of the block is rendered on interaction.</p>
+<div class="docs-code">
+    
+    <pre class="docs-mini-scroll-track">      <pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">@defer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> (on interaction; prefetch on idle) {</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  &lt;</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D">calendar-cmp</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> /&gt;</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">} </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">@placeholder</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> {</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  &lt;</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D">img</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> src</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">=</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"placeholder.png"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> /&gt;</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre>
+    </pre>
+  </div>
+  <h2 id="testing">
+    <a href="#testing" class="docs-anchor" tabindex="-1" aria-label="Link to Testing">Testing</a>
+  </h2>
+  <p>Angular provides TestBed APIs to simplify the process of testing <code>@defer</code> blocks and triggering different states during testing. By default, <code>@defer</code> blocks in tests will play through like a defer block would behave in a real application. If you want to manually step through states, you can switch the defer block behavior to <code>Manual</code> in the TestBed configuration.</p>
+<div class="docs-code">
+    
+    <pre class="docs-mini-scroll-track">      <pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">it</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">'should render a defer block in different states'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">async</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> () </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">=&gt;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> {</span></span><span class="line"><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D">  // configures the defer block behavior to start in "paused" state for manual control.</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  TestBed.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">configureTestingModule</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">({deferBlockBehavior: DeferBlockBehavior.Manual});</span></span><span class="line"></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  @</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">Component</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">({</span></span><span class="line"><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D">    // ...</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">    template: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">`</span></span><span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">      @defer {</span></span><span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">        &lt;large-component /&gt;</span></span><span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">      } @placeholder {</span></span><span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">        Placeholder</span></span><span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">      } @loading {</span></span><span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">        Loading...</span></span><span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">      }</span></span><span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">    `</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  })</span></span><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">  class</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> ComponentA</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> {}</span></span><span class="line"></span><span class="line"><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D">  // Create component fixture.</span></span><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">  const</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF"> componentFixture</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583"> =</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> TestBed.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">createComponent</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(ComponentA);</span></span><span class="line"></span><span class="line"><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D">  // Retrieve the list of all defer block fixtures and get the first block.</span></span><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">  const</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF"> deferBlockFixture</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583"> =</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> (</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">await</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> componentFixture.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">getDeferBlocks</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">())[</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">0</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">];</span></span><span class="line"></span><span class="line"><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D">  // Renders placeholder state by default.</span></span><span class="line"><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">  expect</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(componentFixture.nativeElement.innerHTML).</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">toContain</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">'Placeholder'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">);</span></span><span class="line"></span><span class="line"><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D">  // Render loading state and verify rendered output.</span></span><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">  await</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> deferBlockFixture.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">render</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(DeferBlockState.Loading);</span></span><span class="line"><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">  expect</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(componentFixture.nativeElement.innerHTML).</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">toContain</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">'Loading'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">);</span></span><span class="line"></span><span class="line"><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D">  // Render final state and verify the output.</span></span><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">  await</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> deferBlockFixture.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">render</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(DeferBlockState.Complete);</span></span><span class="line"><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">  expect</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(componentFixture.nativeElement.innerHTML).</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">toContain</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">'large works!'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">);</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">});</span></span></code></pre>
+    </pre>
+  </div>
+  <h2 id="behavior-with-server-side-rendering-ssr-and-static-site-generation-ssg">
+    <a href="#behavior-with-server-side-rendering-ssr-and-static-site-generation-ssg" class="docs-anchor" tabindex="-1" aria-label="Link to Behavior with Server-side rendering (SSR) and Static site generation (SSG)">Behavior with Server-side rendering (SSR) and Static site generation (SSG)</a>
+  </h2>
+  <p>When rendering an application on the server (either using SSR or SSG), defer blocks always render their <code>@placeholder</code> (or nothing if a placeholder is not specified). Triggers are ignored on the server.</p>
+
+  <h2 id="behavior-with-ngmodule">
+    <a href="#behavior-with-ngmodule" class="docs-anchor" tabindex="-1" aria-label="Link to Behavior with <code>NgModule</code>">Behavior with <code>NgModule</code></a>
+  </h2>
+  <p><code>@defer</code> blocks can be used in both standalone and NgModule-based components, directives and pipes. You can use standalone and NgModule-based dependencies inside of a <code>@defer</code> block, however <strong>only standalone components, directives, and pipes can be deferred</strong>. The NgModule-based dependencies would be included into the eagerly loaded bundle.</p>
+
+  <h2 id="nested-defer-blocks-and-avoiding-cascading-loads">
+    <a href="#nested-defer-blocks-and-avoiding-cascading-loads" class="docs-anchor" tabindex="-1" aria-label="Link to Nested <code>@defer</code> blocks and avoiding cascading loads">Nested <code>@defer</code> blocks and avoiding cascading loads</a>
+  </h2>
+  <p>There are cases where nesting multiple <code>@defer</code> blocks may cause cascading requests. An example of this would be when a <code>@defer</code> block with an immediate trigger has a nested <code>@defer</code> block with another immediate trigger. When you have nested <code>@defer</code> blocks, make sure that an inner one has a different set of conditions, so that they don&#39;t trigger at the same time, causing cascading requests.</p>
+
+  <h2 id="avoiding-layout-shifts">
+    <a href="#avoiding-layout-shifts" class="docs-anchor" tabindex="-1" aria-label="Link to Avoiding Layout Shifts">Avoiding Layout Shifts</a>
+  </h2>
+  <p>It is a recommended best practice to not defer components that will be visible in the user&#39;s viewport on initial load. This will negatively affect Core Web Vitals by causing an increase in cumulative layout shift (CLS). If you choose to defer components in this area, it&#39;s best to avoid <code>immediate</code>, <code>timer</code>, <code>viewport</code>, and custom <code>when</code> conditions that would cause the content to be loaded during the initial render of the page.</p>

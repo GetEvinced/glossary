@@ -36,6 +36,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
+            "externalDependencies": ["path"],
             "outputPath": "dist/glossary",
             "index": "src/index.html",
             "browser": "src/main.ts",
@@ -48,28 +49,28 @@
               {
                 "glob": "**/*",
                 "input": "public"
+              },
+              {
+                "glob": "**/*",
+                "input": "src/generated-assets/",
+                "output": "/generated-assets/"
               }
             ],
             "styles": [
+              "src/app/angular-docs/styles/global-styles.scss",
               "src/styles.scss"
             ],
             "scripts": []
           },
           "configurations": {
             "production": {
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "500kB",
-                  "maximumError": "1MB"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "2kB",
-                  "maximumError": "4kB"
+              "outputHashing": "all",
+              "optimization": {
+                "styles": {
+                  "inlineCritical": false,
+                  "minify": true
                 }
-              ],
-              "outputHashing": "all"
+              }
             },
             "development": {
               "optimization": false,

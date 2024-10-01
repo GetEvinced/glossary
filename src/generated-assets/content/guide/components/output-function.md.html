@@ -1,0 +1,92 @@
+
+    <header class="docs-header">
+      <docs-breadcrumb></docs-breadcrumb>
+
+      
+  <!-- Page title -->
+  <div class="docs-page-title">
+    <h1 tabindex="-1">Function-based outputs</h1>
+    <a class="docs-github-links" target="_blank" href="https://github.com/angular/angular/edit/main/adev/src/content/guide/components/output-function.md" title="Edit this page" aria-label="Edit this page">
+      <!-- Pencil -->
+      <docs-icon role="presentation">edit</docs-icon>
+    </a>
+  </div>
+    </header>
+    <p>The <code>output()</code> function declares an output in a directive or component.
+Outputs allow you to emit values to parent components.</p>
+<div class="docs-code">
+    
+    <pre class="docs-mini-scroll-track">      <pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">import</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> {Component, output} </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">from</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF"> '@angular/core'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">;</span></span><span class="line"></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">@</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">Component</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">({</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">...</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">})</span></span><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">export</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583"> class</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> MyComp</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> {</span></span><span class="line highlighted"><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70">  nameChange</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583"> =</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> output</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&lt;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">string</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&gt;()    </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D">// OutputEmitterRef&lt;string&gt;</span></span><span class="line"></span><span class="line"><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">  setNewName</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70">newName</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">:</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF"> string</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">) {</span></span><span class="line highlighted"><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">    this</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">.nameChange.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">emit</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(newName);</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  }</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre>
+    </pre>
+  </div><p>An output is automatically recognized by Angular whenever you use the <code>output</code> function as an initializer of a class member.
+Parent components can listen to outputs in templates by using the event binding syntax.</p>
+<div class="docs-code">
+    
+    <pre class="docs-mini-scroll-track">      <pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&lt;</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D">my-comp</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> (nameChange)</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">=</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"showNewName($event)"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> /&gt;</span></span></code></pre>
+    </pre>
+  </div>
+  <h2 id="aliasing-an-output">
+    <a href="#aliasing-an-output" class="docs-anchor" tabindex="-1" aria-label="Link to Aliasing an output">Aliasing an output</a>
+  </h2>
+  <p>Angular uses the class member name as the name of the output.
+You can alias outputs to change their public name to be different.</p>
+<div class="docs-code">
+    
+    <pre class="docs-mini-scroll-track">      <pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">class</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> MyComp</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> {</span></span><span class="line"><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70">  nameChange</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583"> =</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> output</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">({alias: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">'ngxNameChange'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">});</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre>
+    </pre>
+  </div><p>This allows users to bind to your output using <code>(ngxNameChange)</code>, while inside your component you can access the output emitter using <code>this.nameChange</code>.</p>
+
+  <h2 id="subscribing-programmatically">
+    <a href="#subscribing-programmatically" class="docs-anchor" tabindex="-1" aria-label="Link to Subscribing programmatically">Subscribing programmatically</a>
+  </h2>
+  <p>Consumers may create your component dynamically with a reference to a <code>ComponentRef</code>.
+In those cases, parents can subscribe to outputs by directly accessing the property of type <code>OutputRef</code>.</p>
+<div class="docs-code">
+    
+    <pre class="docs-mini-scroll-track">      <pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">const</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF"> myComp</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583"> =</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> viewContainerRef.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">createComponent</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">...</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">);</span></span><span class="line"></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">myComp.instance.nameChange.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">subscribe</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70">newName</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583"> =&gt;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> {</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  console.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">log</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(newName);</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">});</span></span></code></pre>
+    </pre>
+  </div><p>Angular will automatically clean up the subscription when <code>myComp</code> is destroyed.
+Alternatively, an object with a function to explicitly unsubscribe earlier is returned.</p>
+
+  <h2 id="using-rxjs-observables-as-source">
+    <a href="#using-rxjs-observables-as-source" class="docs-anchor" tabindex="-1" aria-label="Link to Using RxJS observables as source">Using RxJS observables as source</a>
+  </h2>
+  <p>In some cases, you may want to emit output values based on RxJS observables.
+Angular provides a way to use RxJS observables as source for outputs.</p>
+<p>The <code>outputFromObservable</code> function is a compiler primitive, similar to the <code>output()</code> function, and declares outputs that are driven by RxJS observables.</p>
+<div class="docs-code">
+    
+    <pre class="docs-mini-scroll-track">      <pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">import</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> {Directive} </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">from</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF"> '@angular/core'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">;</span></span><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">import</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> {outputFromObservable} </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">from</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF"> '@angular/core/rxjs-interop'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">;</span></span><span class="line"></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">@</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">Directive</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">...</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">)</span></span><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">class</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> MyDir</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> {</span></span><span class="line"><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70">  nameChange$</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583"> =</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF"> this</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">.dataService.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">get</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(); </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D">// Observable&lt;Data&gt;</span></span><span class="line highlighted"><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70">  nameChange</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583"> =</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> outputFromObservable</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">this</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">.nameChange$);</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre>
+    </pre>
+  </div><p>Angular will forward subscriptions to the observable, but will stop forwarding values when the owning directive is destroyed.
+In the example above, if <code>MyDir</code> is destroyed, <code>nameChange</code> will no longer emit values.</p>
+
+    <div class="docs-alert docs-alert-helpful">
+    <p><strong>HELPFUL:</strong> Most of the time, using <code>output()</code> is sufficient and you can emit values imperatively.</p>
+
+    </div>
+    
+  <h2 id="converting-an-output-to-an-observable">
+    <a href="#converting-an-output-to-an-observable" class="docs-anchor" tabindex="-1" aria-label="Link to Converting an output to an observable">Converting an output to an observable</a>
+  </h2>
+  <p>You can subscribe to outputs by calling <code>.subscribe</code> method on <code>OutputRef</code>.
+In other cases, Angular provides a helper function that converts an <code>OutputRef</code> to an observable.</p>
+<div class="docs-code">
+    
+    <pre class="docs-mini-scroll-track">      <pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">import</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> {outputToObservable} </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">from</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF"> '@angular/core/rxjs-interop'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">;</span></span><span class="line"></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">@</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">Component</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">...</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">)</span></span><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">class</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> MyComp</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> {</span></span><span class="line"><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70">  nameChange</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583"> =</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> output</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&lt;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">string</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&gt;();</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">}</span></span><span class="line"></span><span class="line"><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D">// Instance reference to `MyComp`.</span></span><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">const</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF"> myComp</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> MyComp</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">;</span></span><span class="line"></span><span class="line highlighted"><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">outputToObservable</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">this</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">.myComp.instance.nameChange) </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D">// Observable&lt;string&gt;</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  .</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">pipe</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">...</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">)</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  .</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">subscribe</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">...</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">);</span></span></code></pre>
+    </pre>
+  </div>
+  <h2 id="why-you-should-use-output-over-decorator-based-output">
+    <a href="#why-you-should-use-output-over-decorator-based-output" class="docs-anchor" tabindex="-1" aria-label="Link to Why you should use <code>output()</code> over decorator-based <code>@Output()</code>?">Why you should use <code>output()</code> over decorator-based <code>@Output()</code>?</a>
+  </h2>
+  <p>The <code>output()</code> function provides numerous benefits over decorator-based <code>@Output</code> and <code>EventEmitter</code>:</p>
+
+    <ol class="docs-ordered-list">
+      <li>Simpler mental model and API:
+  <br/>• No concept of error channel, completion channels, or other APIs from RxJS.
+  <br/>• Outputs are simple emitters. You can emit values using the <code>.emit</code> function.</li>
+<li>More accurate types.
+  <br/>• <code>OutputEmitterRef.emit(value)</code> is now correctly typed, while <code>EventEmitter</code> has broken types and can cause runtime errors.</li>
+
+    </ol>
+    

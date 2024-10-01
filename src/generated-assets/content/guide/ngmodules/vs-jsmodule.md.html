@@ -1,0 +1,96 @@
+
+    <header class="docs-header">
+      <docs-breadcrumb></docs-breadcrumb>
+
+      
+  <!-- Page title -->
+  <div class="docs-page-title">
+    <h1 tabindex="-1">JavaScript modules vs. NgModules</h1>
+    <a class="docs-github-links" target="_blank" href="https://github.com/angular/angular/edit/main/adev/src/content/guide/ngmodules/vs-jsmodule.md" title="Edit this page" aria-label="Edit this page">
+      <!-- Pencil -->
+      <docs-icon role="presentation">edit</docs-icon>
+    </a>
+  </div>
+    </header>
+    <p>JavaScript modules and NgModules can help you modularize your code, but they are very different.
+Angular applications rely on both kinds of modules.</p>
+
+  <h2 id="javascript-modules-files-exposing-code">
+    <a href="#javascript-modules-files-exposing-code" class="docs-anchor" tabindex="-1" aria-label="Link to JavaScript modules: Files exposing code">JavaScript modules: Files exposing code</a>
+  </h2>
+  <p>A <a href="https://javascript.info/modules" title=JavaScript.Info - Modules target="_blank">JavaScript module</a> is an individual file with JavaScript code, usually containing a class or a library of functions for a specific purpose within your application.
+JavaScript modules let you spread your work across multiple files.</p>
+
+    <div class="docs-alert docs-alert-helpful">
+    <p><strong>HELPFUL:</strong> To learn more about JavaScript modules, see <a href="https://hacks.mozilla.org/2015/08/es6-in-depth-modules" target="_blank">ES6 In Depth: Modules</a>.
+For the module specification, see the <a href="https://www.ecma-international.org/ecma-262/6.0/#sec-modules" target="_blank">6th Edition of the ECMAScript standard</a>.</p>
+
+    </div>
+    <p>To make the code in a JavaScript module available to other modules, use an <code>export</code> statement at the end of the relevant code in the module, such as the following:</p>
+<div class="docs-code">
+    
+    <pre class="docs-mini-scroll-track">      <pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">export</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583"> class</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> AppComponent</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> { … }</span></span></code></pre>
+    </pre>
+  </div><p>When you need that module&#39;s code in another module, use an <code>import</code> statement as follows:</p>
+<div class="docs-code">
+    
+    <pre class="docs-mini-scroll-track">      <pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">import</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> { AppComponent } </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">from</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF"> './app.component'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">;</span></span></code></pre>
+    </pre>
+  </div><p>Each module has its own top-level scope.
+In other words, top-level variables and functions in a module are not seen in other scripts or modules.</p>
+
+  <h2 id="ngmodules-classes-with-metadata-for-compiling">
+    <a href="#ngmodules-classes-with-metadata-for-compiling" class="docs-anchor" tabindex="-1" aria-label="Link to NgModules: Classes with metadata for compiling">NgModules: Classes with metadata for compiling</a>
+  </h2>
+  <p>An NgModule is a class marked by the <code>@NgModule</code> decorator with a metadata object that describes how that particular part of the application fits together with the other parts.
+NgModules are specific to Angular.
+While classes with an <code>@NgModule</code> decorator are by convention kept in their own files, they differ from JavaScript modules because they include this metadata.</p>
+<p>The <code>@NgModule</code> metadata plays an important role in guiding the Angular compilation process that converts the application code you write into highly performant JavaScript code.
+The metadata describes how to compile a component&#39;s template and how to create an injector at runtime.
+It identifies the NgModule&#39;s components, directives, and pipes&quot;),
+and makes some of them public through the <code>exports</code> property so that external components can use them.
+You can also use an NgModule to add providers for services, so that the services are available elsewhere in your application.</p>
+<p>Rather than defining all member classes in one giant file as a JavaScript module, declare which components, directives, and pipes belong to the NgModule in the <code>@NgModule.declarations</code> list.
+These classes are called declarables.
+An NgModule can export only the declarable classes it owns or imports from other NgModules.
+It doesn&#39;t declare or export any other kind of class.
+Declarables are the only classes that matter to the Angular compilation process.</p>
+<p>For a complete description of the NgModule metadata properties, see <a href="guide/ngmodules/api" title=Using the NgModule metadata>Using the NgModule metadata</a>.</p>
+
+  <h2 id="an-example-that-uses-both">
+    <a href="#an-example-that-uses-both" class="docs-anchor" tabindex="-1" aria-label="Link to An example that uses both">An example that uses both</a>
+  </h2>
+  <p>The root NgModule <code>AppModule</code> generated by the <a href="/tools/cli">Angular CLI</a> (when using the <code>--no-standalone</code> option) for a new application project demonstrates how you use both kinds of modules:</p>
+<div class="docs-code" header="src/app/app.module.ts">
+    <div class="docs-code-header"><h3>src/app/app.module.ts</h3></div>
+    <pre class="docs-mini-scroll-track">      <pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">import</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> { BrowserModule } </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">from</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF"> '@angular/platform-browser'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">;</span></span><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">import</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> { NgModule } </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">from</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF"> '@angular/core'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">;</span></span><span class="line"></span><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">import</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> { AppComponent } </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">from</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF"> './app.component'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">;</span></span><span class="line"></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">@</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">NgModule</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">({</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  declarations: [AppComponent],</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  imports: [BrowserModule],</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  providers: [],</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  bootstrap: [AppComponent]</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">})</span></span><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">export</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583"> class</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> AppModule</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> {}</span></span></code></pre>
+    </pre>
+  </div><p>The root NgModule starts with <code>import</code> statements to import JavaScript modules.
+It then configures the <code>@NgModule</code> with the following arrays:</p>
+
+  <ul class="docs-list">
+    <li><p><code>declarations</code>: The components, directives, and pipes that belong to the NgModule.
+A new application project&#39;s root NgModule has only one component, called <code>AppComponent</code>.</p>
+</li>
+<li><p><code>imports</code>: Other NgModules you are using, so that you can use their declarables.
+The newly generated root NgModule imports <a href="api/platform-browser/BrowserModule" title=BrowserModule NgModule><code>BrowserModule</code></a> in order to use browser-specific services such as <a href="https://www.w3.org/TR/DOM-Level-2-Core/introduction.html" title=Definition of Document Object Model target="_blank">DOM</a> rendering, sanitization, and location.</p>
+</li>
+<li><p><code>providers</code>: Providers of services that components in other NgModules can use.
+There are no providers in a newly generated root NgModule.</p>
+</li>
+<li><p><code>bootstrap</code>: The component that Angular creates and inserts into the <code>index.html</code> host web page, thereby bootstrapping the application.
+This component, <code>AppComponent</code>, appears in both the <code>declarations</code> and the <code>bootstrap</code> arrays.</p>
+</li>
+
+  </ul>
+  
+  <h2 id="next-steps">
+    <a href="#next-steps" class="docs-anchor" tabindex="-1" aria-label="Link to Next steps">Next steps</a>
+  </h2>
+  
+  <ul class="docs-list">
+    <li>To learn more about the root NgModule, see <a href="guide/ngmodules/bootstrapping" title=Launching an app with a root NgModule>Launching an app with a root NgModule</a>.</li>
+<li>To learn about frequently used Angular NgModules and how to import them into your app, see <a href="guide/ngmodules/frequent" title=Frequently-used modules>Frequently-used modules</a>.</li>
+
+  </ul>
+  

@@ -1,0 +1,135 @@
+
+    <header class="docs-header">
+      <docs-breadcrumb></docs-breadcrumb>
+
+      
+  <!-- Page title -->
+  <div class="docs-page-title">
+    <h1 tabindex="-1">Providing dependencies in modules</h1>
+    <a class="docs-github-links" target="_blank" href="https://github.com/angular/angular/edit/main/adev/src/content/guide/ngmodules/providers.md" title="Edit this page" aria-label="Edit this page">
+      <!-- Pencil -->
+      <docs-icon role="presentation">edit</docs-icon>
+    </a>
+  </div>
+    </header>
+    <p>A provider is an instruction to the <a href="guide/di">Dependency Injection</a> system on how to obtain a value for a dependency.
+Most of the time, these dependencies are services that you create and provide.</p>
+
+  <h2 id="providing-a-service">
+    <a href="#providing-a-service" class="docs-anchor" tabindex="-1" aria-label="Link to Providing a service">Providing a service</a>
+  </h2>
+  <p>If you already have an application that was created with the <a href="/tools/cli">Angular CLI</a>, you can create a service using the <code>ng generate</code> CLI command in the root project directory.
+Replace <em>User</em> with the name of your service.</p>
+<div class="docs-code shell">
+    
+    <pre class="docs-mini-scroll-track">      <pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">ng</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF"> generate</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF"> service</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF"> User</span></span></code></pre>
+    </pre>
+  </div><p>This command creates the following <code>UserService</code> skeleton:</p>
+<div class="docs-code" header="src/app/user.service.ts">
+    <div class="docs-code-header"><h3>src/app/user.service.ts</h3></div>
+    <pre class="docs-mini-scroll-track">      <pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">import</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> { Injectable } </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">from</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF"> '@angular/core'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">;</span></span><span class="line"></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">@</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">Injectable</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">({</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  providedIn: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">'root'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">,</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">})</span></span><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">export</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583"> class</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> UserService</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> {</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre>
+    </pre>
+  </div><p>You can now inject <code>UserService</code> anywhere in your application.</p>
+<p>The service itself is a class that the CLI generated and that&#39;s decorated with <code>@Injectable()</code>.
+By default, this decorator has a <code>providedIn</code> property, which creates a provider for the service.
+In this case, <code>providedIn: &#39;root&#39;</code> specifies that Angular should provide the service in the root injector.</p>
+
+  <h2 id="provider-scope">
+    <a href="#provider-scope" class="docs-anchor" tabindex="-1" aria-label="Link to Provider scope">Provider scope</a>
+  </h2>
+  <p>When you add a service provider to the root application injector, it&#39;s available throughout the application.
+Additionally, these providers are also available to all the classes in the application as long they have the lookup token.</p>
+<p>You should always provide your service in the root injector unless there is a case where you want the service to be available only if the consumer imports a particular <code>@NgModule</code>.</p>
+
+  <h2 id="limiting-provider-scope-by-lazy-loading-modules">
+    <a href="#limiting-provider-scope-by-lazy-loading-modules" class="docs-anchor" tabindex="-1" aria-label="Link to Limiting provider scope by lazy loading modules">Limiting provider scope by lazy loading modules</a>
+  </h2>
+  <p>In the basic CLI-generated app, modules are eagerly loaded which means that they are all loaded when the application launches.
+Angular uses an injector system to make things available between modules.
+In an eagerly loaded app, the root application injector makes all of the providers in all of the modules available throughout the application.</p>
+<p>This behavior necessarily changes when you use lazy loading.
+Lazy loading is when you load modules only when you need them; for example, when routing.
+They aren&#39;t loaded right away like with eagerly loaded modules.
+This means that any services listed in their provider arrays aren&#39;t available because the root injector doesn&#39;t know about these modules.</p>
+<!--todo: KW--Make diagram here -->
+<!--todo: KW--per Misko: not clear if the lazy modules are siblings or grand-children. They are both depending on router structure. -->
+
+<p>When the Angular router lazy-loads a module, it creates a new injector.
+This injector is a child of the root application injector.
+Imagine a tree of injectors; there is a single root injector and then a child injector for each lazy loaded module.
+This child injector gets populated with all the module-specific providers, if any.
+Look up resolution for every provider follows the <a href="guide/di/hierarchical-dependency-injection#resolution-rules">rules of dependency injection hierarchy</a>.</p>
+<p>Any component created within a lazy loaded module&#39;s context, such as by router navigation, gets its own local instance of child provided services, not the instance in the root application injector.
+Components in external modules continue to receive the instances created for the application root injector.</p>
+<p>Though you can provide services by lazy loading modules, not all services can be lazy loaded.
+For instance, some modules only work in the root module, such as the Router.
+The Router works with the global location object in the browser.</p>
+<p>As of Angular version 9, you can provide a new instance of a service with each lazy loaded module.
+The following code adds this functionality to <code>UserService</code>.</p>
+<div class="docs-code" header="src/app/user.service.ts">
+    <div class="docs-code-header"><h3>src/app/user.service.ts</h3></div>
+    <pre class="docs-mini-scroll-track">      <pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">import</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> { Injectable } </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">from</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF"> '@angular/core'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">;</span></span><span class="line"></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">@</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">Injectable</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">({</span></span><span class="line highlighted"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  providedIn: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">'any'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">,</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">})</span></span><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">export</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583"> class</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> UserService</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> {</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre>
+    </pre>
+  </div><p>With <code>providedIn: &#39;any&#39;</code>, all eagerly loaded modules share a singleton instance; however, lazy loaded modules each get their own unique instance, as shown in the following diagram.</p>
+<img alt="any-provider-scope" class="left" src="assets/images/guide/providers/any-provider.svg">
+
+
+  <h2 id="limiting-provider-scope-with-components">
+    <a href="#limiting-provider-scope-with-components" class="docs-anchor" tabindex="-1" aria-label="Link to Limiting provider scope with components">Limiting provider scope with components</a>
+  </h2>
+  <p>Another way to limit provider scope is by adding the service you want to limit to the component&#39;s <code>providers</code> array.
+Component providers and NgModule providers are independent of each other.
+This method is helpful when you want to eagerly load a module that needs a service all to itself.
+Providing a service in the component limits the service only to that component and its descendants.
+Other components in the same module can&#39;t access it.</p>
+<div class="docs-code" header="src/app/app.component.ts">
+    <div class="docs-code-header"><h3>src/app/app.component.ts</h3></div>
+    <pre class="docs-mini-scroll-track">      <pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">@</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">Component</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">({</span></span><span class="line"><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D">  // ...</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  providers: [UserService]</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">})</span></span><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">export</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583"> class</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> AppComponent</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> {}</span></span></code></pre>
+    </pre>
+  </div>
+  <h2 id="providing-services-in-modules-vs-components">
+    <a href="#providing-services-in-modules-vs-components" class="docs-anchor" tabindex="-1" aria-label="Link to Providing services in modules vs. components">Providing services in modules vs. components</a>
+  </h2>
+  <p>Generally, provide services the whole application needs in the root module and scope services by providing them in lazy loaded modules.</p>
+<p>The router works at the root level so if you put providers in a component, even <code>AppComponent</code>, lazy loaded modules, which rely on the router, can&#39;t see them.</p>
+<!-- KW--Make a diagram here -->
+<p>Register a provider with a component when you must limit a service instance to a component and its component tree, that is, its child components.
+For example, a user editing component, <code>UserEditorComponent</code>, that needs a private copy of a caching <code>UserService</code> should register the <code>UserService</code> with the <code>UserEditorComponent</code>.
+Then each new instance of the <code>UserEditorComponent</code> gets its own cached service instance.</p>
+
+  <h2 id="injector-hierarchy-and-service-instances">
+    <a href="#injector-hierarchy-and-service-instances" class="docs-anchor" tabindex="-1" aria-label="Link to Injector hierarchy and service instances">Injector hierarchy and service instances</a>
+  </h2>
+  <p>Services are singletons within the scope of an injector, which means there is at most one instance of a service in a given injector.</p>
+<p>Angular DI has a <a href="guide/di/hierarchical-dependency-injection">hierarchical injection system</a>, which means that nested injectors can create their own service instances.
+Whenever Angular creates a new instance of a component that has <code>providers</code> specified in <code>@Component()</code>, it also creates a new child injector for that instance.
+Similarly, when a new NgModule is lazy-loaded at run time, Angular can create an injector for it with its own providers.</p>
+<p>Child modules and component injectors are independent of each other, and create their own separate instances of the provided services.
+When Angular destroys an NgModule or component instance, it also destroys that injector and that injector&#39;s service instances.</p>
+<p>For more information, see <a href="guide/di/hierarchical-dependency-injection">Hierarchical injectors</a>.</p>
+
+  <h2 id="more-on-ngmodules">
+    <a href="#more-on-ngmodules" class="docs-anchor" tabindex="-1" aria-label="Link to More on NgModules">More on NgModules</a>
+  </h2>
+  
+    <nav class="docs-pill-row">
+      
+    <a class="docs-pill" href="/guide/ngmodules/singleton-services">
+      Singleton Services
+    </a>
+    
+    <a class="docs-pill" href="/guide/ngmodules/lazy-loading">
+      Lazy Loading Modules
+    </a>
+    
+    <a class="docs-pill" href="/guide/di/dependency-injection-providers">
+      Dependency providers
+    </a>
+    
+    <a class="docs-pill" href="/guide/ngmodules/faq">
+      NgModule FAQ
+    </a>
+    
+
+    </nav>
+    

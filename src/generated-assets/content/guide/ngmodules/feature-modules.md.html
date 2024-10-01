@@ -1,0 +1,122 @@
+
+    <header class="docs-header">
+      <docs-breadcrumb></docs-breadcrumb>
+
+      
+  <!-- Page title -->
+  <div class="docs-page-title">
+    <h1 tabindex="-1">Feature modules</h1>
+    <a class="docs-github-links" target="_blank" href="https://github.com/angular/angular/edit/main/adev/src/content/guide/ngmodules/feature-modules.md" title="Edit this page" aria-label="Edit this page">
+      <!-- Pencil -->
+      <docs-icon role="presentation">edit</docs-icon>
+    </a>
+  </div>
+    </header>
+    <p>Feature modules are NgModules for the purpose of organizing code.</p>
+<p>As your application grows, you can organize code relevant for a specific feature.
+This helps apply clear boundaries for features.
+With feature modules, you can keep code related to a specific functionality or feature separate from other code.
+Delineating areas of your application helps with collaboration between developers and teams, separating directives, and managing the size of the root module.</p>
+
+  <h2 id="feature-modules-vs-root-modules">
+    <a href="#feature-modules-vs-root-modules" class="docs-anchor" tabindex="-1" aria-label="Link to Feature modules vs. root modules">Feature modules vs. root modules</a>
+  </h2>
+  <p>A feature module is an organizational best practice, as opposed to a concept of the core Angular API.
+A feature module delivers a cohesive set of functionality focused on a specific application need such as a user workflow, routing, or forms.
+While you can do everything within the root module, feature modules help you partition the application into focused areas.
+A feature module collaborates with the root module and with other modules through the services it provides and the components, directives, and pipes that it shares.</p>
+
+  <h2 id="how-to-make-a-feature-module">
+    <a href="#how-to-make-a-feature-module" class="docs-anchor" tabindex="-1" aria-label="Link to How to make a feature module">How to make a feature module</a>
+  </h2>
+  <p>Assuming you already have an application that you created with the <a href="/tools/cli">Angular CLI</a>, create a feature module using the CLI by entering the following command in the root project directory.
+You can omit the &quot;Module&quot; suffix from the name because the CLI appends it:</p>
+<div class="docs-code shell">
+    
+    <pre class="docs-mini-scroll-track">      <pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">ng</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF"> generate</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF"> module</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF"> CustomerDashboard</span></span></code></pre>
+    </pre>
+  </div><p>This causes the CLI to create a folder called <code>customer-dashboard</code> with a file inside called <code>customer-dashboard.module.ts</code> with the following contents:</p>
+<div class="docs-code">
+    
+    <pre class="docs-mini-scroll-track">      <pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">import</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> { NgModule } </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">from</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF"> '@angular/core'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">;</span></span><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">import</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> { CommonModule } </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">from</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF"> '@angular/common'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">;</span></span><span class="line"></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">@</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">NgModule</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">({</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  imports: [</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">    CommonModule</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  ],</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  declarations: []</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">})</span></span><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">export</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583"> class</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> CustomerDashboardModule</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> { }</span></span></code></pre>
+    </pre>
+  </div><p>The structure of an NgModule is the same whether it is a root module or a feature module.
+In the CLI generated feature module, there are two JavaScript import statements at the top of the file: the first imports <code>NgModule</code>, which, like the root module, lets you use the <code>@NgModule</code> decorator; the second imports <code>CommonModule</code>, which contributes many common directives such as <code>ngIf</code> and <code>ngFor</code>.</p>
+
+    <div class="docs-alert docs-alert-note">
+    <p><strong>Note:</strong> Feature modules import <code>CommonModule</code> instead of <code>BrowserModule</code>, which is only imported once in the root module.
+<code>CommonModule</code> only contains information for common directives such as <code>ngIf</code> and <code>ngFor</code> which are needed in most templates, whereas <code>BrowserModule</code> configures the Angular application for the browser which needs to be done only once.</p>
+
+    </div>
+    <p>The <code>declarations</code> array is available for you to add declarables, which are components, directives, and pipes that belong exclusively to this particular module.
+To add a component, enter the following command at the command line where <code>customer-dashboard</code> is the directory where the CLI generated the feature module and <code>CustomerDashboard</code> is the name of the component:</p>
+<div class="docs-code shell">
+    
+    <pre class="docs-mini-scroll-track">      <pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">ng</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF"> generate</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF"> component</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF"> customer-dashboard/CustomerDashboard</span></span></code></pre>
+    </pre>
+  </div><p>This generates a folder for the new component within the <code>customer-dashboard</code> folder and updates <code>CustomerDashboardModule</code>.</p>
+<div class="docs-code" header="src/app/customer-dashboard/customer-dashboard.module.ts">
+    <div class="docs-code-header"><h3>src/app/customer-dashboard/customer-dashboard.module.ts</h3></div>
+    <pre class="docs-mini-scroll-track">      <pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">import</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> { NgModule } </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">from</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF"> '@angular/core'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">;</span></span><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">import</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> { CommonModule } </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">from</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF"> '@angular/common'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">;</span></span><span class="line"></span><span class="line highlighted"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">import</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> { CustomerDashboardComponent } </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">from</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF"> './customer-dashboard/customer-dashboard.component'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">;</span></span><span class="line"></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">@</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">NgModule</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">({</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  imports: [</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">    CommonModule</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  ],</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  declarations: [</span></span><span class="line highlighted"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">    CustomerDashboardComponent</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  ],</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  exports: [</span></span><span class="line highlighted"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">    CustomerDashboardComponent</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  ]</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">})</span></span><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">export</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583"> class</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> CustomerDashboardModule</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> { }</span></span></code></pre>
+    </pre>
+  </div><p>The <code>CustomerDashboardComponent</code> is now in the JavaScript import list at the top and added to the <code>declarations</code> array, which lets Angular know to associate this new component with this feature module.</p>
+
+  <h2 id="importing-a-feature-module">
+    <a href="#importing-a-feature-module" class="docs-anchor" tabindex="-1" aria-label="Link to Importing a feature module">Importing a feature module</a>
+  </h2>
+  <p>To incorporate the feature module into your app, you have to let the root module, <code>app.module.ts</code>, know about it.
+Notice the <code>CustomerDashboardModule</code> export at the bottom of <code>customer-dashboard.module.ts</code>.
+This exposes it so that other modules can get to it.
+To import it into the <code>AppModule</code>, add it to the imports in <code>app.module.ts</code> and to the <code>imports</code> array:</p>
+<div class="docs-code" header="src/app/app.module.ts">
+    <div class="docs-code-header"><h3>src/app/app.module.ts</h3></div>
+    <pre class="docs-mini-scroll-track">      <pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">import</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> { NgModule } </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">from</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF"> '@angular/core'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">;</span></span><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">import</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> { BrowserModule } </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">from</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF"> '@angular/platform-browser'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">;</span></span><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">import</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> { AppComponent } </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">from</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF"> './app.component'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">;</span></span><span class="line"></span><span class="line highlighted"><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D">// import the feature module here so you can add it to the imports array below</span></span><span class="line highlighted"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">import</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> { CustomerDashboardModule } </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">from</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF"> './customer-dashboard/customer-dashboard.module'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">;</span></span><span class="line"></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">@</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">NgModule</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">({</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  declarations: [</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">    AppComponent</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  ],</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  imports: [</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">    BrowserModule,</span></span><span class="line highlighted"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">    CustomerDashboardModule </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D">// add the feature module here</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  ],</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  providers: [],</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  bootstrap: [AppComponent]</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">})</span></span><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">export</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583"> class</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> AppModule</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> { }</span></span></code></pre>
+    </pre>
+  </div><p>Now the <code>AppModule</code> knows about the feature module and <code>AppComponent</code> can use the customer dashboard component.
+More details on this in the section below.</p>
+<p>If you were to add any service providers to the feature module, <code>AppModule</code> would know about those too, as would any other imported feature modules.</p>
+
+  <h2 id="rendering-a-feature-modules-component-template">
+    <a href="#rendering-a-feature-modules-component-template" class="docs-anchor" tabindex="-1" aria-label="Link to Rendering a feature module&#39;s component template">Rendering a feature module&#39;s component template</a>
+  </h2>
+  <p>When the CLI generated the <code>CustomerDashboardComponent</code> for the feature module, it included a template, <code>customer-dashboard.component.html</code>, with the following markup:</p>
+<div class="docs-code" header="src/app/customer-dashboard/customer-dashboard/customer-dashboard.component.html">
+    <div class="docs-code-header"><h3>src/app/customer-dashboard/customer-dashboard/customer-dashboard.component.html</h3></div>
+    <pre class="docs-mini-scroll-track">      <pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&lt;</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D">p</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&gt;</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  customer-dashboard works!</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&lt;/</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D">p</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&gt;</span></span></code></pre>
+    </pre>
+  </div><p>To see this HTML in the <code>AppComponent</code>, you first have to export the <code>CustomerDashboardComponent</code> in the <code>CustomerDashboardModule</code>.
+In <code>customer-dashboard.module.ts</code>, just beneath the <code>declarations</code> array, add an <code>exports</code> array containing <code>CustomerDashboardComponent</code>:</p>
+<div class="docs-code" header="src/app/customer-dashboard/customer-dashboard.module.ts">
+    <div class="docs-code-header"><h3>src/app/customer-dashboard/customer-dashboard.module.ts</h3></div>
+    <pre class="docs-mini-scroll-track">      <pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">exports</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: [</span></span><span class="line highlighted"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">    CustomerDashboardComponent</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  ]</span></span></code></pre>
+    </pre>
+  </div><p>Next, in the <code>AppComponent</code>, <code>app.component.html</code>, add the tag <code>&lt;app-customer-dashboard&gt;</code>:</p>
+<div class="docs-code" header="src/app/app.component.html">
+    <div class="docs-code-header"><h3>src/app/app.component.html</h3></div>
+    <pre class="docs-mini-scroll-track">      <pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&lt;</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D">h1</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&gt;</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  {{title}}</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&lt;/</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D">h1</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&gt;</span></span><span class="line"></span><span class="line highlighted"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&lt;</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D">app-customer-dashboard</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&gt;&lt;/</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D">app-customer-dashboard</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&gt;</span></span></code></pre>
+    </pre>
+  </div><p>Now, in addition to the title that renders by default, the <code>CustomerDashboardComponent</code> template renders too:</p>
+<img alt="feature module component" src="assets/images/guide/modules/feature-module.png">
+
+
+  <h2 id="more-on-ngmodules">
+    <a href="#more-on-ngmodules" class="docs-anchor" tabindex="-1" aria-label="Link to More on NgModules">More on NgModules</a>
+  </h2>
+  
+    <nav class="docs-pill-row">
+      
+    <a class="docs-pill" href="/guide/ngmodules/lazy-loading">
+      Lazy Loading Modules with the Angular Router
+    </a>
+    
+    <a class="docs-pill" href="/guide/ngmodules/providers">
+      Providers
+    </a>
+    
+    <a class="docs-pill" href="/guide/ngmodules/module-types">
+      Types of Feature Modules
+    </a>
+    
+
+    </nav>
+    

@@ -1,0 +1,105 @@
+
+    <header class="docs-header">
+      <docs-breadcrumb></docs-breadcrumb>
+
+      
+  <!-- Page title -->
+  <div class="docs-page-title">
+    <h1 tabindex="-1">Model inputs</h1>
+    <a class="docs-github-links" target="_blank" href="https://github.com/angular/angular/edit/main/adev/src/content/guide/signals/model.md" title="Edit this page" aria-label="Edit this page">
+      <!-- Pencil -->
+      <docs-icon role="presentation">edit</docs-icon>
+    </a>
+  </div>
+    </header>
+    <p><strong>Model inputs</strong> are a special type of input that enable a component to propagate new values
+back to another component.</p>
+<p>When creating a component, you can define a model input similarly to how you create a standard
+input.</p>
+<div class="docs-code">
+    
+    <pre class="docs-mini-scroll-track">      <pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">import</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> {Component, model, input} </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">from</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF"> '@angular/core'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">;</span></span><span class="line"></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">@</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">Component</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">({</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">...</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">})</span></span><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">export</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583"> class</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> CustomCheckbox</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> {</span></span><span class="line"><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D">  // This is a model input.</span></span><span class="line"><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70">  checked</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583"> =</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> model</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">false</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">);</span></span><span class="line"></span><span class="line"><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D">  // This is a standard input.</span></span><span class="line"><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70">  disabled</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583"> =</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> input</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">false</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">);</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre>
+    </pre>
+  </div><p>Both types of input allow someone to bind a value into the property. However, <strong>model inputs allow
+the component author to write values into the property</strong>.</p>
+<p>In other respects, you can use model inputs the same way you use standard inputs. You can read the
+value by calling the signal function, including in reactive contexts like <code>computed</code> and <code>effect</code>.</p>
+<div class="docs-code">
+    
+    <pre class="docs-mini-scroll-track">      <pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">import</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> {Component, model, input} </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">from</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF"> '@angular/core'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">;</span></span><span class="line"></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">@</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">Component</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">({</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  selector: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">'custom-checkbox'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">,</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  template: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&lt;</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D">div</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> (click)</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">=</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"toggle()"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&gt; ... &lt;/</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D">div</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&gt;</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">,</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">})</span></span><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">export</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583"> class</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> CustomCheckbox</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> {</span></span><span class="line"><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70">  checked</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583"> =</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> model</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">false</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">);</span></span><span class="line"><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70">  disabled</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583"> =</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> input</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">false</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">);</span></span><span class="line"></span><span class="line"><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">  toggle</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">() {</span></span><span class="line"><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D">    // While standard inputs are read-only, you can write directly to model inputs.</span></span><span class="line"><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">    this</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">.checked.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">set</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">!</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">this</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">checked</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">());</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  }</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre>
+    </pre>
+  </div><p>When a component writes a new value into a model input, Angular can propagate the new value back
+to the component that is binding a value into that input. This is called <strong>two-way binding</strong> because
+values can flow in both directions.</p>
+
+  <h2 id="two-way-binding-with-signals">
+    <a href="#two-way-binding-with-signals" class="docs-anchor" tabindex="-1" aria-label="Link to Two-way binding with signals">Two-way binding with signals</a>
+  </h2>
+  <p>You can bind a writable signal to a model input.</p>
+<div class="docs-code">
+    
+    <pre class="docs-mini-scroll-track">      <pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">@</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">Component</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">({</span></span><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">  ...</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">,</span></span><span class="line"><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D">  // `checked` is a model input.</span></span><span class="line"><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D">  // The parenthesis-inside-square-brackets syntax (aka "banana-in-a-box") creates a two-way binding</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  template: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&lt;</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D">custom-checkbox</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> [(checked)]</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">=</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"isAdmin"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> /&gt;</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">,</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">})</span></span><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">export</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583"> class</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> UserProfile</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> {</span></span><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">  protected</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70"> isAdmin</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583"> =</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> signal</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">false</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">);</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre>
+    </pre>
+  </div><p>In the above example, the <code>CustomCheckbox</code> can write values into its <code>checked</code> model input, which
+then propagates those values back to the <code>isAdmin</code> signal in <code>UserProfile</code>. This binding keeps that
+values of <code>checked</code> and <code>isAdmin</code> in sync. Notice that the binding passes the <code>isAdmin</code> signal
+itself, not the <em>value</em> of the signal.</p>
+
+  <h2 id="two-way-binding-with-plain-properties">
+    <a href="#two-way-binding-with-plain-properties" class="docs-anchor" tabindex="-1" aria-label="Link to Two-way binding with plain properties">Two-way binding with plain properties</a>
+  </h2>
+  <p>You can bind a plain JavaScript property to a model input.</p>
+<div class="docs-code">
+    
+    <pre class="docs-mini-scroll-track">      <pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">@</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">Component</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">({</span></span><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">  ...</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">,</span></span><span class="line"><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D">  // `checked` is a model input.</span></span><span class="line"><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D">  // The parenthesis-inside-square-brackets syntax (aka "banana-in-a-box") creates a two-way binding</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  template: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&lt;</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D">custom-checkbox</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> [(checked)]</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">=</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"isAdmin"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> /&gt;</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">,</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">})</span></span><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">export</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583"> class</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> UserProfile</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> {</span></span><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">  protected</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70"> isAdmin</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583"> =</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF"> false</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">;</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre>
+    </pre>
+  </div><p>In the example above, the <code>CustomCheckbox</code> can write values into its <code>checked</code> model input, which
+then propagates those values back to the <code>isAdmin</code> property in <code>UserProfile</code>. This binding keeps
+that values of <code>checked</code> and <code>isAdmin</code> in sync.</p>
+
+  <h2 id="implicit-change-events">
+    <a href="#implicit-change-events" class="docs-anchor" tabindex="-1" aria-label="Link to Implicit <code>change</code> events">Implicit <code>change</code> events</a>
+  </h2>
+  <p>When you declare a model input in a component or directive, Angular automatically creates a
+corresponding <a href="guide/components/outputs">output</a> for that model. The output&#39;s name is the model
+input&#39;s name suffixed with &quot;Change&quot;.</p>
+<div class="docs-code">
+    
+    <pre class="docs-mini-scroll-track">      <pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">@</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">Directive</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">({</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">...</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">})</span></span><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">export</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583"> class</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> CustomCheckbox</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> {</span></span><span class="line"><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D">  // This automatically creates an output named "checkedChange".</span></span><span class="line"><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D">  // Can be subscribed to using `(checkedChange)="handler()"` in the template.</span></span><span class="line"><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70">  checked</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583"> =</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> model</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">false</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">);</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre>
+    </pre>
+  </div><p>Angular emits this change event whenever you write a new value into the model input by calling
+its <code>set</code> or <code>update</code> methods.</p>
+
+  <h2 id="customizing-model-inputs">
+    <a href="#customizing-model-inputs" class="docs-anchor" tabindex="-1" aria-label="Link to Customizing model inputs">Customizing model inputs</a>
+  </h2>
+  <p>You can mark a model input as required or provide an alias in the same way as a
+<a href="guide/signals/inputs">standard input</a>.</p>
+<p>Model inputs do not support input transforms.</p>
+
+  <h2 id="differences-between-model-and-input">
+    <a href="#differences-between-model-and-input" class="docs-anchor" tabindex="-1" aria-label="Link to Differences between <code>model()</code> and <code>input()</code>">Differences between <code>model()</code> and <code>input()</code></a>
+  </h2>
+  <p>Both <code>input()</code> and <code>model()</code> functions are ways to define signal-based inputs in Angular, but they
+differ in a few ways:</p>
+
+    <ol class="docs-ordered-list">
+      <li><code>model()</code> defines <strong>both</strong> an input and an output. The output&#39;s name is always the name of the
+input suffixed with <code>Change</code> to support two-way bindings. It will be up to the consumer of your
+directive to decide if they want to use just the input, just the output, or both.</li>
+<li><code>ModelSignal</code> is a <code>WritableSignal</code> which means that its value can be changed from anywhere
+using the <code>set</code> and <code>update</code> methods. When a new value is assigned, the <code>ModelSignal</code> will emit
+to its output. This is different from <code>InputSignal</code> which is read-only and can only be changed
+through the template.</li>
+<li>Model inputs do not support input transforms while signal inputs do.</li>
+
+    </ol>
+    
+  <h2 id="when-to-use-model-inputs">
+    <a href="#when-to-use-model-inputs" class="docs-anchor" tabindex="-1" aria-label="Link to When to use model inputs">When to use model inputs</a>
+  </h2>
+  <p>Use model inputs in components that exist to modify a value based on user interaction.
+Custom form controls, such as a date picker or combobox, should use model inputs for their
+primary value.</p>
+<p>Avoid using model inputs as a convenience to avoid introducing an additional class property for
+containing local state.</p>

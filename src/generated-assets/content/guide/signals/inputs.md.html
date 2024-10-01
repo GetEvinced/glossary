@@ -1,0 +1,122 @@
+
+    <header class="docs-header">
+      <docs-breadcrumb></docs-breadcrumb>
+
+      
+  <!-- Page title -->
+  <div class="docs-page-title">
+    <h1 tabindex="-1">Signal inputs</h1>
+    <a class="docs-github-links" target="_blank" href="https://github.com/angular/angular/edit/main/adev/src/content/guide/signals/inputs.md" title="Edit this page" aria-label="Edit this page">
+      <!-- Pencil -->
+      <docs-icon role="presentation">edit</docs-icon>
+    </a>
+  </div>
+    </header>
+    <p>Signal inputs allow values to be bound from parent components.
+Those values are exposed using a <code>Signal</code> and can change during the lifecycle of your component.</p>
+<p>Angular supports two variants of inputs:</p>
+<p><strong>Optional inputs</strong>
+Inputs are optional by default, unless you use <code>input.required</code>.
+You can specify an explicit initial value, or Angular will use <code>undefined</code> implicitly.</p>
+<p><strong>Required inputs</strong>
+Required inputs always have a value of the given input type.
+They are declared using the <code>input.required</code> function.</p>
+<div class="docs-code">
+    
+    <pre class="docs-mini-scroll-track">      <pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">import</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> {Component, input} </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">from</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF"> '@angular/core'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">;</span></span><span class="line"></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">@</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">Component</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">({</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">...</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">})</span></span><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">export</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583"> class</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> MyComp</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> {</span></span><span class="line"><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D">  // optional</span></span><span class="line"><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70">  firstName</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583"> =</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> input</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&lt;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">string</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&gt;();         </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D">// InputSignal&lt;string|undefined&gt;</span></span><span class="line"><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70">  age</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583"> =</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> input</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">0</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">);                      </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D">// InputSignal&lt;number&gt;</span></span><span class="line"></span><span class="line"><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D">  // required</span></span><span class="line"><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70">  lastName</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583"> =</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> input.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">required</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&lt;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">string</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&gt;(); </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D">// InputSignal&lt;string&gt;</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre>
+    </pre>
+  </div><p>An input is automatically recognized by Angular whenever you use the <code>input</code> or <code>input.required</code> functions as initializer of class members.</p>
+
+  <h2 id="aliasing-an-input">
+    <a href="#aliasing-an-input" class="docs-anchor" tabindex="-1" aria-label="Link to Aliasing an input">Aliasing an input</a>
+  </h2>
+  <p>Angular uses the class member name as the name of the input.
+You can alias inputs to change their public name to be different.</p>
+<div class="docs-code">
+    
+    <pre class="docs-mini-scroll-track">      <pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">class</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> StudentDirective</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> {</span></span><span class="line"><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70">  age</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583"> =</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> input</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">0</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, {alias: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">'studentAge'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">});</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre>
+    </pre>
+  </div><p>This allows users to bind to your input using <code>[studentAge]</code>, while inside your component you can access the input values using <code>this.age</code>.</p>
+
+  <h2 id="using-in-templates">
+    <a href="#using-in-templates" class="docs-anchor" tabindex="-1" aria-label="Link to Using in templates">Using in templates</a>
+  </h2>
+  <p>Signal inputs are read-only signals.
+As with signals declared via <code>signal()</code>, you access the current value of the input by calling the input signal.</p>
+<div class="docs-code">
+    
+    <pre class="docs-mini-scroll-track">      <pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&lt;</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D">p</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&gt;First name: {{</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">firstName</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">()}}&lt;/</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D">p</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&gt;</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&lt;</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D">p</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&gt;Last name: {{</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">lastName</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">()}}&lt;/</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D">p</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&gt;</span></span></code></pre>
+    </pre>
+  </div><p>This access to the value is captured in reactive contexts and can notify active consumers, like Angular itself, whenever the input value changes.</p>
+<p>An input signal in practice is a trivial extension of signals that you know from <a href="guide/signals">the signals guide</a>.</p>
+<div class="docs-code">
+    
+    <pre class="docs-mini-scroll-track">      <pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">export</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583"> class</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> InputSignal</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&lt;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">T</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&gt; </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">extends</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> Signal</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&lt;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">T</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&gt; { </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">...</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> }</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">`.</span></span></code></pre>
+    </pre>
+  </div>
+  <h2 id="deriving-values">
+    <a href="#deriving-values" class="docs-anchor" tabindex="-1" aria-label="Link to Deriving values">Deriving values</a>
+  </h2>
+  <p>As with signals, you can derive values from inputs using <code>computed</code>.</p>
+<div class="docs-code">
+    
+    <pre class="docs-mini-scroll-track">      <pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">import</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> {Component, input, computed} </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">from</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF"> '@angular/core'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">;</span></span><span class="line"></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">@</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">Component</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">({</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">...</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">})</span></span><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">export</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583"> class</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> MyComp</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> {</span></span><span class="line"><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70">  age</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583"> =</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> input</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">0</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">);</span></span><span class="line"></span><span class="line"><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D">  // age multiplied by two.</span></span><span class="line"><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70">  ageMultiplied</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583"> =</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> computed</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(() </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">=&gt;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF"> this</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">age</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">() </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">*</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF"> 2</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">);</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre>
+    </pre>
+  </div><p>Computed signals memoize values.
+See more details in the <a href="guide/signals#computed-signals">dedicated section for computed</a>.</p>
+
+  <h2 id="monitoring-changes">
+    <a href="#monitoring-changes" class="docs-anchor" tabindex="-1" aria-label="Link to Monitoring changes">Monitoring changes</a>
+  </h2>
+  <p>With signal inputs, users can leverage the <code>effect</code> function.
+The function will execute whenever the input changes.</p>
+<p>Consider the following example.
+The new value is printed to the console whenever the <code>firstName</code> input changes.</p>
+<div class="docs-code">
+    
+    <pre class="docs-mini-scroll-track">      <pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">import</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> {input, effect} </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">from</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF"> '@angular/core'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">;</span></span><span class="line"></span><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">class</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> MyComp</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> {</span></span><span class="line"><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70">  firstName</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583"> =</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> input.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">required</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&lt;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">string</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&gt;();</span></span><span class="line"></span><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">  constructor</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">() {</span></span><span class="line"><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">    effect</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(() </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">=&gt;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> {</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">      console.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">log</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">this</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">firstName</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">());</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">    });</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  }</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre>
+    </pre>
+  </div><p>The <code>console.log</code> function is invoked every time the <code>firstName</code> input changes.
+This will happen as soon as <code>firstName</code> is available, and for subsequent changes during the lifetime of <code>MyComp</code>.</p>
+
+  <h2 id="value-transforms">
+    <a href="#value-transforms" class="docs-anchor" tabindex="-1" aria-label="Link to Value transforms">Value transforms</a>
+  </h2>
+  <p>You may want to coerce or parse input values without changing the meaning of the input.
+Transforms convert the raw value from parent templates to the expected input type.
+Transforms should be <a href="https://en.wikipedia.org/wiki/Pure_function" target="_blank">pure functions</a>.</p>
+<div class="docs-code">
+    
+    <pre class="docs-mini-scroll-track">      <pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">class</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> MyComp</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> {</span></span><span class="line"><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70">  disabled</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583"> =</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> input</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">false</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, {</span></span><span class="line"><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">    transform</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: (</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70">value</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">:</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF"> boolean</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">|</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">string</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">) </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">=&gt;</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583"> typeof</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> value </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">===</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF"> 'string'</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583"> ?</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> value </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">===</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF"> ''</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583"> :</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> value,</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  });</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre>
+    </pre>
+  </div><p>In the example above, you are declaring an input named <code>disabled</code> that is accepting values of type <code>boolean</code> and <code>string</code>.
+This is captured by the explicit parameter type of <code>value</code> in the <code>transform</code> option.
+These values are then parsed to a <code>boolean</code> with the transform, resulting in booleans.</p>
+<p>That way, you are only dealing with <code>boolean</code> inside your component when calling <code>this.disabled()</code>, while users of your component can pass an empty string as a shorthand to mark your component as disabled.</p>
+<div class="docs-code">
+    
+    <pre class="docs-mini-scroll-track">      <pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&lt;</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D">my-custom-comp</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> disabled</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&gt;</span></span></code></pre>
+    </pre>
+  </div>
+    <div class="docs-alert docs-alert-important">
+    <p><strong>IMPORTANT:</strong> Do not use transforms if they change the meaning of the input, or if they are <a href="https://en.wikipedia.org/wiki/Pure_function#Impure_functions" target="_blank">impure</a>.
+Instead, use <code>computed</code> for transformations with different meaning, or an <code>effect</code> for impure code that should run whenever the input changes.</p>
+
+    </div>
+    
+  <h2 id="why-should-we-use-signal-inputs-and-not-input">
+    <a href="#why-should-we-use-signal-inputs-and-not-input" class="docs-anchor" tabindex="-1" aria-label="Link to Why should we use signal inputs and not <code>@Input()</code>?">Why should we use signal inputs and not <code>@Input()</code>?</a>
+  </h2>
+  <p>Signal inputs are a reactive alternative to decorator-based <code>@Input()</code>.</p>
+<p>In comparison to decorator-based <code>@Input</code>, signal inputs provide numerous benefits:</p>
+
+    <ol class="docs-ordered-list">
+      <li>Signal inputs are more <strong>type safe</strong>:
+  <br/>• Required inputs do not require initial values, or tricks to tell TypeScript that an input <em>always</em> has a value.
+  <br/>• Transforms are automatically checked to match the accepted input values.</li>
+<li>Signal inputs, when used in templates, will <strong>automatically</strong> mark <code>OnPush</code> components as dirty.</li>
+<li>Values can be easily <strong>derived</strong> whenever an input changes using <code>computed</code>.</li>
+<li>Easier and more local monitoring of inputs using <code>effect</code> instead of <code>ngOnChanges</code> or setters.</li>
+
+    </ol>
+    

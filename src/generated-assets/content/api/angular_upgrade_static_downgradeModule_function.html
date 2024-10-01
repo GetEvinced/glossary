@@ -1,0 +1,157 @@
+<div class="api"><header class="docs-reference-header"><span class="docs-reference-category">@angular/upgrade/static</span><div class="docs-reference-title"><div><h1>downgradeModule</h1><div class="docs-api-item-label" data-mode="full" data-type="function">function</div></div><a class="docs-github-links" target="_blank" href="https://github.com/angular/angular/blob/main/packages/upgrade/static/src/downgrade_module.ts#L139-L141" title="View source" aria-label="View source"><i role="presentation" aria-hidden="true" class="material-symbols-outlined">code</i></a></div><section class="docs-reference-description"><p>A helper function for creating an AngularJS module that can bootstrap an Angular module
+&quot;on-demand&quot; (possibly lazily) when a <a href="/api/upgrade/static/downgradeComponent"><code>downgraded component</code></a> needs to be
+instantiated.</p></section></header><div data-tab="API" data-tab-url="api"><div class="docs-reference-api-tab"><div class="docs-code"><pre class="docs-mini-scroll-track"><pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0">
+  <code>
+    <button aria-describedby="jump-msg" type="button" class="line " member-id="downgradeModule_0"><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"><a href="/api/upgrade/static/downgradeModule">downgradeModule</a></span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70">moduleOrBootstrapFn</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> <a href="/api/core/Type">Type</a></span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&#x3C;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">T</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">> </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">|</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> ((</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70">extraProviders</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> <a href="/api/core/StaticProvider">StaticProvider</a></span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">[]) </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">=></span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> Promise</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&#x3C;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"><a href="/api/core/NgModuleRef">NgModuleRef</a></span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&#x3C;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">T</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">>>))</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">:</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF"> string</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">;</span></button><button aria-describedby="jump-msg" type="button" class="line shiki-deprecated" member-id="downgradeModule_1"><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"><a href="/api/upgrade/static/downgradeModule">downgradeModule</a></span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70">moduleOrBootstrapFn</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> <a href="/api/core/NgModuleFactory">NgModuleFactory</a></span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&#x3C;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">T</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">>)</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">:</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF"> string</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">;</span></button>
+  </code>
+  </pre></pre></div></div></div><div data-tab="Description" data-tab-url="description"><div><p>A helper function for creating an AngularJS module that can bootstrap an Angular module
+&quot;on-demand&quot; (possibly lazily) when a <a href="/api/upgrade/static/downgradeComponent"><code>downgraded component</code></a> needs to be
+instantiated.</p>
+<p><em>Part of the <a href="api?query=upgrade/static">upgrade/static</a> library for hybrid upgrade apps that
+support AOT compilation.</em></p>
+<p>It allows loading/bootstrapping the Angular part of a hybrid application lazily and not having to
+pay the cost up-front. For example, you can have an AngularJS application that uses Angular for
+specific routes and only instantiate the Angular modules if/when the user visits one of these
+routes.</p>
+<p>The Angular module will be bootstrapped once (when requested for the first time) and the same
+reference will be used from that point onwards.</p>
+<p><code><a href="/api/upgrade/static/downgradeModule()">downgradeModule()</a></code> requires either an <code><a href="/api/core/NgModuleFactory">NgModuleFactory</a></code>, <code><a href="/api/core/NgModule">NgModule</a></code> class or a function:</p>
+
+    <ul class="docs-list">
+      <li><code><a href="/api/core/NgModuleFactory">NgModuleFactory</a></code>: If you pass an <code><a href="/api/core/NgModuleFactory">NgModuleFactory</a></code>, it will be used to instantiate a module
+using <code><a href="/api/platform-browser/platformBrowser">platformBrowser</a></code>&#39;s <a href="/api/core/PlatformRef#bootstrapModuleFactory"><code>bootstrapModuleFactory()</code></a>.
+NOTE: this type of the argument is deprecated. Please either provide an <code><a href="/api/core/NgModule">NgModule</a></code> class or a
+bootstrap function instead.</li>
+<li><code><a href="/api/core/NgModule">NgModule</a></code> class: If you pass an NgModule class, it will be used to instantiate a module
+using <code><a href="/api/platform-browser/platformBrowser">platformBrowser</a></code>&#39;s <a href="/api/core/PlatformRef#bootstrapModule"><code>bootstrapModule()</code></a>.</li>
+<li><code>Function</code>: If you pass a function, it is expected to return a promise resolving to an
+<code><a href="/api/core/NgModuleRef">NgModuleRef</a></code>. The function is called with an array of extra <a href="/api/core/StaticProvider"><code>Providers</code></a>  that are expected to be available from the returned <code><a href="/api/core/NgModuleRef">NgModuleRef</a></code>&#39;s <code><a href="/api/core/Injector">Injector</a></code>.</li>
+
+    </ul>
+    <p><code><a href="/api/upgrade/static/downgradeModule()">downgradeModule()</a></code> returns the name of the created AngularJS wrapper module. You can use it to
+declare a dependency in your main AngularJS module.</p>
+<p>{@example upgrade/static/ts/lite/module.ts region=&quot;basic-how-to&quot;}</p>
+<p>For more details on how to use <code><a href="/api/upgrade/static/downgradeModule()">downgradeModule()</a></code> see
+<a href="https://angular.io/guide/upgrade">Upgrading for Performance</a>.</p></div></div><div data-tab="Usage Notes" data-tab-url="usage-notes"><div><p>Apart from <code><a href="/api/upgrade/static/UpgradeModule">UpgradeModule</a></code>, you can use the rest of the <code>upgrade/static</code> helpers as usual to
+build a hybrid application. Note that the Angular pieces (e.g. downgraded services) will not be
+available until the downgraded module has been bootstrapped, i.e. by instantiating a downgraded
+component.</p>
+<div class="alert is-important">
+
+<p>  You cannot use <code><a href="/api/upgrade/static/downgradeModule()">downgradeModule()</a></code> and <code><a href="/api/upgrade/static/UpgradeModule">UpgradeModule</a></code> in the same hybrid application.<br />
+  Use one or the other.</p>
+</div>
+
+<h3>Differences with <code><a href="/api/upgrade/static/UpgradeModule">UpgradeModule</a></code></h3>
+<p>Besides their different API, there are two important internal differences between
+<code><a href="/api/upgrade/static/downgradeModule()">downgradeModule()</a></code> and <code><a href="/api/upgrade/static/UpgradeModule">UpgradeModule</a></code> that affect the behavior of hybrid applications:</p>
+
+      <ol class="docs-ordered-list">
+        <li>Unlike <code><a href="/api/upgrade/static/UpgradeModule">UpgradeModule</a></code>, <code><a href="/api/upgrade/static/downgradeModule()">downgradeModule()</a></code> does not bootstrap the main AngularJS module
+inside the {@link NgZone Angular zone}.</li>
+<li>Unlike <code><a href="/api/upgrade/static/UpgradeModule">UpgradeModule</a></code>, <code><a href="/api/upgrade/static/downgradeModule()">downgradeModule()</a></code> does not automatically run a
+<a href="https://docs.angularjs.org/api/ng/type/$rootScope.Scope#$digest">$digest()</a> when changes are
+detected in the Angular part of the application.</li>
+
+      </ol>
+      <p>What this means is that applications using <code><a href="/api/upgrade/static/UpgradeModule">UpgradeModule</a></code> will run change detection more
+frequently in order to ensure that both frameworks are properly notified about possible changes.
+This will inevitably result in more change detection runs than necessary.</p>
+<p><code><a href="/api/upgrade/static/downgradeModule()">downgradeModule()</a></code>, on the other side, does not try to tie the two change detection systems as
+tightly, restricting the explicit change detection runs only to cases where it knows it is
+necessary (e.g. when the inputs of a downgraded component change). This improves performance,
+especially in change-detection-heavy applications, but leaves it up to the developer to manually
+notify each framework as needed.</p>
+<p>For a more detailed discussion of the differences and their implications, see
+<a href="https://angular.io/guide/upgrade">Upgrading for Performance</a>.</p>
+<div class="alert is-helpful">
+
+<p>  You can manually trigger a change detection run in AngularJS using
+  <a href="https://docs.angularjs.org/api/ng/type/$rootScope.Scope#$apply">scope.$apply(...)</a> or
+  <a href="https://docs.angularjs.org/api/ng/type/$rootScope.Scope#$digest">$rootScope.$digest()</a>.</p>
+<p>  You can manually trigger a change detection run in Angular using {@link NgZone#run *   ngZone.run(...)}.</p>
+</div>
+
+<h3>Downgrading multiple modules</h3>
+<p>It is possible to downgrade multiple modules and include them in an AngularJS application. In
+that case, each downgraded module will be bootstrapped when an associated downgraded component or
+injectable needs to be instantiated.</p>
+<p>Things to keep in mind, when downgrading multiple modules:</p>
+
+    <ul class="docs-list">
+      <li><p>Each downgraded component/injectable needs to be explicitly associated with a downgraded
+module. See <code><a href="/api/upgrade/static/downgradeComponent()">downgradeComponent()</a></code> and <code><a href="/api/upgrade/static/downgradeInjectable()">downgradeInjectable()</a></code> for more details.</p>
+</li>
+<li><p>If you want some injectables to be shared among all downgraded modules, you can provide them as
+<code><a href="/api/core/StaticProvider">StaticProvider</a></code>s, when creating the <code><a href="/api/core/PlatformRef">PlatformRef</a></code> (e.g. via <code><a href="/api/platform-browser/platformBrowser">platformBrowser</a></code> or
+<code>platformBrowserDynamic</code>).</p>
+</li>
+<li><p>When using {@link PlatformRef#bootstrapmodule <code>bootstrapModule()</code>} or
+{@link PlatformRef#bootstrapmodulefactory <code>bootstrapModuleFactory()</code>} to bootstrap the
+downgraded modules, each one is considered a &quot;root&quot; module. As a consequence, a new instance
+will be created for every injectable provided in <code>&quot;root&quot;</code> (via
+{@link Injectable#providedIn <code>providedIn</code>}).
+If this is not your intention, you can have a shared module (that will act as act as the &quot;root&quot;
+module) and create all downgraded modules using that module&#39;s injector:</p>
+<code-example path="upgrade/static/ts/lite-multi-shared/module.ts" region="shared-root-module" /></li>
+
+    </ul>
+    </div></div><div class="docs-reference-members-container"><div class="docs-reference-members"><div class="docs-reference-member-card" id="downgradeModule_0" tabindex="-1"><header><code><div><pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">downgradeModule</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&#x3C;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">T</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">>(</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70">moduleOrBootstrapFn</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> Type</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&#x3C;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">T</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">> </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">|</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> ((</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70">extraProviders</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> StaticProvider</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">[]) </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">=></span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> Promise</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&#x3C;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">NgModuleRef</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&#x3C;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">T</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">>>))</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">:</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF"> string</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">;</span></span></code></pre></div></code></header><div class="docs-reference-card-body"><div class="docs-reference-card-item "><div class="docs-function-definition"><p>A helper function for creating an AngularJS module that can bootstrap an Angular module
+&quot;on-demand&quot; (possibly lazily) when a <a href="/api/upgrade/static/downgradeComponent"><code>downgraded component</code></a> needs to be
+instantiated.</p>
+<p><em>Part of the <a href="api?query=upgrade/static">upgrade/static</a> library for hybrid upgrade apps that
+support AOT compilation.</em></p>
+<p>It allows loading/bootstrapping the Angular part of a hybrid application lazily and not having to
+pay the cost up-front. For example, you can have an AngularJS application that uses Angular for
+specific routes and only instantiate the Angular modules if/when the user visits one of these
+routes.</p>
+<p>The Angular module will be bootstrapped once (when requested for the first time) and the same
+reference will be used from that point onwards.</p>
+<p><code><a href="/api/upgrade/static/downgradeModule()">downgradeModule()</a></code> requires either an <code><a href="/api/core/NgModuleFactory">NgModuleFactory</a></code>, <code><a href="/api/core/NgModule">NgModule</a></code> class or a function:</p>
+
+    <ul class="docs-list">
+      <li><code><a href="/api/core/NgModuleFactory">NgModuleFactory</a></code>: If you pass an <code><a href="/api/core/NgModuleFactory">NgModuleFactory</a></code>, it will be used to instantiate a module
+using <code><a href="/api/platform-browser/platformBrowser">platformBrowser</a></code>&#39;s <a href="/api/core/PlatformRef#bootstrapModuleFactory"><code>bootstrapModuleFactory()</code></a>.
+NOTE: this type of the argument is deprecated. Please either provide an <code><a href="/api/core/NgModule">NgModule</a></code> class or a
+bootstrap function instead.</li>
+<li><code><a href="/api/core/NgModule">NgModule</a></code> class: If you pass an NgModule class, it will be used to instantiate a module
+using <code><a href="/api/platform-browser/platformBrowser">platformBrowser</a></code>&#39;s <a href="/api/core/PlatformRef#bootstrapModule"><code>bootstrapModule()</code></a>.</li>
+<li><code>Function</code>: If you pass a function, it is expected to return a promise resolving to an
+<code><a href="/api/core/NgModuleRef">NgModuleRef</a></code>. The function is called with an array of extra <a href="/api/core/StaticProvider"><code>Providers</code></a>  that are expected to be available from the returned <code><a href="/api/core/NgModuleRef">NgModuleRef</a></code>&#39;s <code><a href="/api/core/Injector">Injector</a></code>.</li>
+
+    </ul>
+    <p><code><a href="/api/upgrade/static/downgradeModule()">downgradeModule()</a></code> returns the name of the created AngularJS wrapper module. You can use it to
+declare a dependency in your main AngularJS module.</p>
+<p>{@example upgrade/static/ts/lite/module.ts region=&quot;basic-how-to&quot;}</p>
+<p>For more details on how to use <code><a href="/api/upgrade/static/downgradeModule()">downgradeModule()</a></code> see
+<a href="https://angular.io/guide/upgrade">Upgrading for Performance</a>.</p></div><div class="docs-param-group"><span class="docs-param-keyword">@param</span><span class="docs-param-name">moduleOrBootstrapFn</span><code><a href="/api/core/Type">Type</a>&lt;T> | ((extraProviders: <a href="/api/core/StaticProvider">StaticProvider</a>[]) => Promise&lt;<a href="/api/core/NgModuleRef">NgModuleRef</a>&lt;T>>)</code><div class="docs-parameter-description"></div></div><div class="docs-return-type"><span class="docs-param-keyword">@returns</span><code>string</code></div></div></div></div><div class="docs-reference-member-card" id="downgradeModule_1" tabindex="-1"><header><code><div><pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">downgradeModule</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&#x3C;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">T</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">>(</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70">moduleOrBootstrapFn</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> NgModuleFactory</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&#x3C;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">T</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">>)</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">:</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF"> string</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">;</span></span></code></pre></div></code></header><div class="docs-reference-card-body"><div class="docs-reference-card-item docs-reference-card-item-deprecated"><div class="docs-function-definition"><p>A helper function for creating an AngularJS module that can bootstrap an Angular module
+&quot;on-demand&quot; (possibly lazily) when a <a href="/api/upgrade/static/downgradeComponent"><code>downgraded component</code></a> needs to be
+instantiated.</p>
+<p><em>Part of the <a href="api?query=upgrade/static">upgrade/static</a> library for hybrid upgrade apps that
+support AOT compilation.</em></p>
+<p>It allows loading/bootstrapping the Angular part of a hybrid application lazily and not having to
+pay the cost up-front. For example, you can have an AngularJS application that uses Angular for
+specific routes and only instantiate the Angular modules if/when the user visits one of these
+routes.</p>
+<p>The Angular module will be bootstrapped once (when requested for the first time) and the same
+reference will be used from that point onwards.</p>
+<p><code><a href="/api/upgrade/static/downgradeModule()">downgradeModule()</a></code> requires either an <code><a href="/api/core/NgModuleFactory">NgModuleFactory</a></code>, <code><a href="/api/core/NgModule">NgModule</a></code> class or a function:</p>
+
+    <ul class="docs-list">
+      <li><code><a href="/api/core/NgModuleFactory">NgModuleFactory</a></code>: If you pass an <code><a href="/api/core/NgModuleFactory">NgModuleFactory</a></code>, it will be used to instantiate a module
+using <code><a href="/api/platform-browser/platformBrowser">platformBrowser</a></code>&#39;s <a href="/api/core/PlatformRef#bootstrapModuleFactory"><code>bootstrapModuleFactory()</code></a>.
+NOTE: this type of the argument is deprecated. Please either provide an <code><a href="/api/core/NgModule">NgModule</a></code> class or a
+bootstrap function instead.</li>
+<li><code><a href="/api/core/NgModule">NgModule</a></code> class: If you pass an NgModule class, it will be used to instantiate a module
+using <code><a href="/api/platform-browser/platformBrowser">platformBrowser</a></code>&#39;s <a href="/api/core/PlatformRef#bootstrapModule"><code>bootstrapModule()</code></a>.</li>
+<li><code>Function</code>: If you pass a function, it is expected to return a promise resolving to an
+<code><a href="/api/core/NgModuleRef">NgModuleRef</a></code>. The function is called with an array of extra <a href="/api/core/StaticProvider"><code>Providers</code></a>  that are expected to be available from the returned <code><a href="/api/core/NgModuleRef">NgModuleRef</a></code>&#39;s <code><a href="/api/core/Injector">Injector</a></code>.</li>
+
+    </ul>
+    <p><code><a href="/api/upgrade/static/downgradeModule()">downgradeModule()</a></code> returns the name of the created AngularJS wrapper module. You can use it to
+declare a dependency in your main AngularJS module.</p>
+<p>{@example upgrade/static/ts/lite/module.ts region=&quot;basic-how-to&quot;}</p>
+<p>For more details on how to use <code><a href="/api/upgrade/static/downgradeModule()">downgradeModule()</a></code> see
+<a href="https://angular.io/guide/upgrade">Upgrading for Performance</a>.</p></div><div><div class="docs-deprecation-message"><span class="docs-param-keyword docs-deprecated">@deprecated</span><span><p>Passing <code><a href="/api/core/NgModuleFactory">NgModuleFactory</a></code> as the <code><a href="/api/upgrade/static/downgradeModule">downgradeModule</a></code> function argument is deprecated,
+please pass an NgModule class reference instead.</p>
+</span></div></div><div class="docs-param-group"><span class="docs-param-keyword">@param</span><span class="docs-param-name">moduleOrBootstrapFn</span><code><a href="/api/core/NgModuleFactory">NgModuleFactory</a>&lt;T></code><div class="docs-parameter-description"></div></div><div class="docs-return-type"><span class="docs-param-keyword">@returns</span><code>string</code></div></div></div></div></div></div></div>

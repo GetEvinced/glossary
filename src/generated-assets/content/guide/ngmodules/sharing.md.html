@@ -1,0 +1,50 @@
+
+    <header class="docs-header">
+      <docs-breadcrumb></docs-breadcrumb>
+
+      
+  <!-- Page title -->
+  <div class="docs-page-title">
+    <h1 tabindex="-1">Sharing modules</h1>
+    <a class="docs-github-links" target="_blank" href="https://github.com/angular/angular/edit/main/adev/src/content/guide/ngmodules/sharing.md" title="Edit this page" aria-label="Edit this page">
+      <!-- Pencil -->
+      <docs-icon role="presentation">edit</docs-icon>
+    </a>
+  </div>
+    </header>
+    <p>Creating shared modules allows you to organize and streamline your code.
+You can put commonly used directives, pipes, and components into one module and then import just that module wherever you need it in other parts of your application.</p>
+<p>Consider the following module from an imaginary app:</p>
+<div class="docs-code">
+    
+    <pre class="docs-mini-scroll-track">      <pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">import</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> { CommonModule } </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">from</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF"> '@angular/common'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">;</span></span><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">import</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> { NgModule } </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">from</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF"> '@angular/core'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">;</span></span><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">import</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> { FormsModule } </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">from</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF"> '@angular/forms'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">;</span></span><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">import</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> { CustomerComponent } </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">from</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF"> './customer.component'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">;</span></span><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">import</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> { NewItemDirective } </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">from</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF"> './new-item.directive'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">;</span></span><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">import</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> { OrdersPipe } </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">from</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF"> './orders.pipe'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">;</span></span><span class="line"></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">@</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">NgModule</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">({</span></span><span class="line highlighted"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  imports: [CommonModule],</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  declarations: [</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">    CustomerComponent,</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">    NewItemDirective,</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">    OrdersPipe</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  ],</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  exports: [</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">    CustomerComponent,</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">    NewItemDirective,</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">    OrdersPipe,</span></span><span class="line highlighted"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">    CommonModule,</span></span><span class="line highlighted"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">    FormsModule</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  ],</span></span><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">})</span></span><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">export</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583"> class</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> SharedModule</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> { }</span></span></code></pre>
+    </pre>
+  </div><p>Notice the following:</p>
+
+  <ul class="docs-list">
+    <li>It imports the <code>CommonModule</code> because the module&#39;s component needs common directives</li>
+<li>It declares and exports the utility pipe, directive, and component classes</li>
+<li>It re-exports the <code>CommonModule</code> and <code>FormsModule</code></li>
+
+  </ul>
+  <p>By re-exporting <code>CommonModule</code> and <code>FormsModule</code>, any other module that imports this <code>SharedModule</code>, gets access to directives like <code>NgIf</code> and <code>NgFor</code> from <code>CommonModule</code> and can bind to component properties with <code>[(ngModel)]</code>, a directive in the <code>FormsModule</code>.</p>
+<p>Even though the components declared by <code>SharedModule</code> might not bind with <code>[(ngModel)]</code> and there may be no need for <code>SharedModule</code> to import <code>FormsModule</code>, <code>SharedModule</code> can still export <code>FormsModule</code> without listing it among its <code>imports</code>.
+This way, you can give other modules access to <code>FormsModule</code> without having to make it available for itself.</p>
+
+  <h2 id="more-on-ngmodules">
+    <a href="#more-on-ngmodules" class="docs-anchor" tabindex="-1" aria-label="Link to More on NgModules">More on NgModules</a>
+  </h2>
+  
+    <nav class="docs-pill-row">
+      
+    <a class="docs-pill" href="/guide/ngmodules/providers">
+      Providers
+    </a>
+    
+    <a class="docs-pill" href="/guide/ngmodules/module-types">
+      Types of Feature Modules
+    </a>
+    
+
+    </nav>
+    

@@ -1,0 +1,36 @@
+<div class="api"><header class="docs-reference-header"><span class="docs-reference-category">@angular/core</span><div class="docs-reference-title"><div><h1>InjectionToken</h1><div class="docs-api-item-label" data-mode="full" data-type="undecorated_class">Class</div></div><a class="docs-github-links" target="_blank" href="https://github.com/angular/angular/blob/main/packages/core/src/di/injection_token.ts#L63-L108" title="View source" aria-label="View source"><i role="presentation" aria-hidden="true" class="material-symbols-outlined">code</i></a></div><section class="docs-reference-description"><p>Creates a token that can be used in a DI Provider.</p></section></header><div data-tab="API" data-tab-url="api"><div class="docs-reference-api-tab"><div class="docs-code"><pre class="docs-mini-scroll-track"><pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0">
+  <code>
+    <span class="line "><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">class</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> <a href="/api/core/InjectionToken">InjectionToken</a></span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">&#x3C;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">T</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">> {</span></span><button aria-describedby="jump-msg" type="button" class="line " member-id="toString"><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">  toString</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">()</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">:</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF"> string</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">;</span></button><span class="line "><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">}</span></span>
+  </code>
+  </pre></pre></div></div></div><div data-tab="Description" data-tab-url="description"><div><p>Creates a token that can be used in a DI Provider.</p>
+<p>Use an <code><a href="/api/core/InjectionToken">InjectionToken</a></code> whenever the type you are injecting is not reified (does not have a
+runtime representation) such as when injecting an interface, callable type, array or
+parameterized type.</p>
+<p><code><a href="/api/core/InjectionToken">InjectionToken</a></code> is parameterized on <code>T</code> which is the type of object which will be returned by
+the <code><a href="/api/core/Injector">Injector</a></code>. This provides an additional level of type safety.</p>
+<div class="alert is-helpful">
+
+<p><strong>Important Note</strong>: Ensure that you use the same instance of the <code><a href="/api/core/InjectionToken">InjectionToken</a></code> in both the
+provider and the injection call. Creating a new instance of <code><a href="/api/core/InjectionToken">InjectionToken</a></code> in different places,
+even with the same description, will be treated as different tokens by Angular&#39;s DI system,
+leading to a <code>NullInjectorError</code>.</p>
+</div>
+
+<p><code-example format="typescript" language="typescript" path="injection-token/src/main.ts"
+region="InjectionToken"></code-example></p>
+<p>When creating an <code><a href="/api/core/InjectionToken">InjectionToken</a></code>, you can optionally specify a factory function which returns
+(possibly by creating) a default value of the parameterized type <code>T</code>. This sets up the
+<code><a href="/api/core/InjectionToken">InjectionToken</a></code> using this factory as a provider as if it was defined explicitly in the
+application&#39;s root injector. If the factory function, which takes zero arguments, needs to inject
+dependencies, it can do so using the <a href="api/core/inject"><code>inject</code></a> function.
+As you can see in the Tree-shakable InjectionToken example below.</p>
+<p>Additionally, if a <code>factory</code> is specified you can also specify the <code>providedIn</code> option, which
+overrides the above behavior and marks the token as belonging to a particular <code>@NgModule</code> (note:
+this option is now deprecated). As mentioned above, <code>&#39;root&#39;</code> is the default value for
+<code>providedIn</code>.</p>
+<p>The <code>providedIn: NgModule</code> and <code>providedIn: &#39;any&#39;</code> options are deprecated.</p></div></div><div data-tab="Usage Notes" data-tab-url="usage-notes"><div><h3>Basic Examples</h3>
+<h3>Plain InjectionToken</h3>
+<code-example path="core/di/ts/injector_spec.ts" region="InjectionToken" />
+
+<h3>Tree-shakable InjectionToken</h3>
+<code-example path="core/di/ts/injector_spec.ts" region="ShakableInjectionToken" /></div></div><div class="docs-reference-members-container"><div class="docs-reference-members"><div id="toString" class="docs-reference-member-card" tabindex="-1"><header><div class="docs-reference-card-header"><h3>toString</h3><div><code>string</code></div></div></header><div class="docs-reference-card-body"><div class="docs-reference-card-item "><div class="docs-function-definition"></div><div class="docs-return-type"><span class="docs-param-keyword">@returns</span><code>string</code></div></div></div></div></div></div></div>
