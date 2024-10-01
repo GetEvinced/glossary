@@ -29,7 +29,6 @@ import {
 import {NavigationEnd, Router, RouterLink} from '@angular/router';
 import {filter, map, startWith} from 'rxjs/operators';
 import {DOCS_ROUTES} from '../../../routes';
-import {GITHUB, MEDIUM, X, YOUTUBE, DISCORD} from '../../constants/links';
 import {PagePrefix} from '../../enums/pages';
 import {Theme, ThemeManager} from '../../services/theme-manager.service';
 import {PRIMARY_NAV_ID, SECONDARY_NAV_ID} from '../../constants/element-ids';
@@ -59,12 +58,6 @@ export class Navigation implements OnInit {
 
   readonly DOCS_ROUTE = PagePrefix.DOCS;
   readonly HOME_ROUTE = PagePrefix.HOME;
-
-  readonly GITHUB = GITHUB;
-  readonly X = X;
-  readonly MEDIUM = MEDIUM;
-  readonly YOUTUBE = YOUTUBE;
-  readonly DISCORD = DISCORD;
 
   readonly PRIMARY_NAV_ID = PRIMARY_NAV_ID;
   readonly SECONDARY_NAV_ID = SECONDARY_NAV_ID;
