@@ -34,12 +34,12 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:application",
+          "builder": "@angular-devkit/build-angular:browser-esbuild",
           "options": {
             "externalDependencies": ["path"],
             "outputPath": "dist/glossary",
             "index": "src/index.html",
-            "browser": "src/main.ts",
+            "main": "src/main.ts",
             "polyfills": [],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
@@ -51,9 +51,9 @@
                 "input": "public"
               },
               {
-                "glob": "**/*",
-                "input": "src/generated-assets/",
-                "output": "/generated-assets/"
+                "glob": "**/*.md.html",
+                "input": "src/content/",
+                "output": "/content/"
               }
             ],
             "styles": [

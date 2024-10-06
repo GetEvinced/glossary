@@ -30,7 +30,7 @@ export class ContentLoader implements DocsContentLoader {
           path,
           firstValueFrom(
             this.httpClient
-              .get(`generated-assets/content/${path}`, {
+              .get(`content/${path}`, {
                 responseType: 'text',
               })
               .pipe(map((contents) => ({contents, id: path}))),
