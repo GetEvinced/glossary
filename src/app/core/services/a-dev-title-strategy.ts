@@ -13,7 +13,7 @@ import {ActivatedRouteSnapshot, RouterStateSnapshot, TitleStrategy} from '@angul
 
 export const ROUTE_TITLE_PROPERTY = 'label';
 export const ROUTE_PARENT_PROPERTY = 'parent';
-export const TITLE_SUFFIX = 'Angular';
+export const TITLE_SUFFIX = 'Glossary';
 export const TITLE_SEPARATOR = ' • ';
 export const DEFAULT_PAGE_TITLE = 'Overview';
 
