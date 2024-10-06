@@ -1,5 +1,11 @@
 # See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
 
+# Generated Content
+
+/src/content/**/*.html
+/src/scripts/routes.json
+/src/scripts/shell-file
+
 # Compiled output
 /dist
 /tmp
