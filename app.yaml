@@ -1,0 +1,14 @@
+runtime: nodejs20
+service: default
+
+handlers:
+  # Serve all static files with urls ending with a file extension
+  - url: /(.*\..+)$
+    secure: always
+    static_files: dist/glossary/\1
+    upload: dist/glossary/(.*\..+)$
+    # catch all handler to index.html
+  - url: /.*
+    secure: always
+    static_files: dist/glossary/index.html
+    upload: dist/glossary/index.html
