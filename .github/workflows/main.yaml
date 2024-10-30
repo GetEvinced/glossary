@@ -52,4 +52,6 @@ jobs:
           workload_identity_provider: 'projects/821437815290/locations/global/workloadIdentityPools/github/providers/github-gcp'
       - name: App Engine Deploy
         uses: google-github-actions/deploy-appengine@v2
+        with:
+          flags: '--verbosity=debug'
 
