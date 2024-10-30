@@ -52,6 +52,7 @@ jobs:
         with:
           service_account: '${{ secrets.APPENGINE_DEPLOY_SA_EMAIL }}'
           workload_identity_provider: '${{ secrets.WIF_PROVIDER_NAME }}'
+          create_credentials_file: false
       - name: Bashing
         run: |
           ls -al
