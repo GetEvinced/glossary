@@ -48,8 +48,8 @@ jobs:
       - name: GCP Auth
         uses: 'google-github-actions/auth@v2'
         with:
-          service_account: 'gha-service-account@glossary-app-440113.iam.gserviceaccount.com'
-          workload_identity_provider: 'projects/821437815290/locations/global/workloadIdentityPools/github/providers/github-gcp'
+          service_account: '${{ secrets.APPENGINE_DEPLOY_SA_EMAIL }}'
+          workload_identity_provider: '${{ secrets.WIF_PROVIDER_NAME }}'
       - name: App Engine Deploy
         uses: google-github-actions/deploy-appengine@v2
         with:
