@@ -51,7 +51,16 @@ jobs:
           service_account: '${{ secrets.APPENGINE_DEPLOY_SA_EMAIL }}'
           workload_identity_provider: '${{ secrets.WIF_PROVIDER_NAME }}'
       - name: App Engine Deploy
+        id: deployment
         uses: google-github-actions/deploy-appengine@v2
         with:
           flags: '--verbosity=debug'
+      - name: Bashing
+        run: |
+          ls -al
+          ls -al dist
+          ls -al dist/glossary
+      - name: Result
+        run: |
+          echo ${{ steps.deploy.outputs.url }}
 
