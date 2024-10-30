@@ -34,6 +34,7 @@ jobs:
           name: glossary-dist
           retention-days: 2
   deploy:
+    continue-on-error: true
     needs: build
     permissions:
       contents: read
@@ -50,16 +51,16 @@ jobs:
         with:
           service_account: '${{ secrets.APPENGINE_DEPLOY_SA_EMAIL }}'
           workload_identity_provider: '${{ secrets.WIF_PROVIDER_NAME }}'
-      - name: App Engine Deploy
-        id: deployment
-        uses: google-github-actions/deploy-appengine@v2
-        with:
-          flags: '--verbosity=debug'
       - name: Bashing
         run: |
           ls -al
           ls -al dist
           ls -al dist/glossary
+      - name: App Engine Deploy
+        id: deployment
+        uses: google-github-actions/deploy-appengine@v2
+        with:
+          flags: '--verbosity=debug'
       - name: Result
         run: |
           echo ${{ steps.deploy.outputs.url }}
