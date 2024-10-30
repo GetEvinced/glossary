@@ -52,19 +52,17 @@ jobs:
         with:
           service_account: '${{ secrets.APPENGINE_DEPLOY_SA_EMAIL }}'
           workload_identity_provider: '${{ secrets.WIF_PROVIDER_NAME }}'
-          create_credentials_file: false
-          project_id: 'glossary-app-440113'
       - name: Bashing
         run: |
           ls -al
           ls -al dist
           ls -al dist/glossary
+          cat glossary/gha-creds-2*
       - name: App Engine Deploy
         id: deployment
         uses: google-github-actions/deploy-appengine@v2
         with:
           flags: '--verbosity=debug'
-          project_id: 'glossary-app-440113'
       - name: Result
         run: |
           echo ${{ steps.deploy.outputs.url }}
