@@ -57,7 +57,8 @@ jobs:
           ls -al
           ls -al dist
           ls -al dist/glossary
-          cat /home/runner/work/glossary/glossary/gha-creds-2*
+          ls -al dist/glossary/glossary/*
+          tree .
       - name: App Engine Deploy
         id: deployment
         uses: google-github-actions/deploy-appengine@v2
