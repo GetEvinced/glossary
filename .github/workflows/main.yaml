@@ -58,6 +58,7 @@ jobs:
           ls -al dist
           ls -al dist/glossary
           tree .
+          cat gha-creds*
       - name: App Engine Deploy
         id: deployment
         uses: google-github-actions/deploy-appengine@v2
