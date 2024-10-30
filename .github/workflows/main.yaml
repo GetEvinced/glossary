@@ -39,5 +39,5 @@ jobs:
           workload_identity_provider: projects/821437815290/locations/global/workloadIdentityPools/github/providers/github-gcp
       - uses: google-github-actions/deploy-appengine@v2
         with:
-          project_id: glossary-ng-app
+          project_id: glossary-app-440113
 
