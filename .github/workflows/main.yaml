@@ -57,7 +57,6 @@ jobs:
           ls -al
           ls -al dist
           ls -al dist/glossary
-          ls -al dist/glossary/glossary/*
           tree .
       - name: App Engine Deploy
         id: deployment
