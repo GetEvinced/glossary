@@ -1,6 +1,9 @@
 name: 'Build and deploy to GCP'
 
 on:
+  pull_request:
+    branches:
+      - main
   push:
     branches:
       - main
@@ -14,8 +17,7 @@ jobs:
       contents: read
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
@@ -25,6 +27,12 @@ jobs:
         run: npm ci
       - name: Build
         run: npm run build
+      - name: Store build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          path: dist
+          name: glossary-dist
+          retention-days: 2
   deploy:
     needs: build
     permissions:
@@ -33,11 +41,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: google-github-actions/auth@v2
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
         with:
-          project_id: glossary-app-440113
-          workload_identity_provider: projects/821437815290/locations/global/workloadIdentityPools/github/providers/github-gcp
-      - uses: google-github-actions/deploy-appengine@v2
+          path: dist
+          name: glossary-dist
+      - name: GCP Auth
+        uses: 'google-github-actions/auth@v2'
         with:
-          project_id: glossary-app-440113
+          service_account: '${{ secrets.APPENGINE_DEPLOY_SA_EMAIL }}'
+          workload_identity_provider: '${{ secrets.WIF_PROVIDER_NAME }}'
+      - name: App Engine Deploy
+        id: deployment
+        uses: google-github-actions/deploy-appengine@v2
+        with:
+          promote: false
+          flags: '--verbosity=debug'
+      - name: Result
+        run: |
+          echo ${{ steps.deploy.outputs.url }}
 
