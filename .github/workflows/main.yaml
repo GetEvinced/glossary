@@ -55,6 +55,7 @@ jobs:
         id: deployment
         uses: google-github-actions/deploy-appengine@v2
         with:
+          promote: false
           flags: '--verbosity=debug'
       - name: Result
         run: |
